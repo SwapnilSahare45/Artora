@@ -1,0 +1,17 @@
+@import "tailwindcss";
+
+@theme {
+    --color-background: #f3f4f6;
+    --color-white: #ffffff;
+    --color-primary: #2e7d6f;
+    --color-text: #1f2937;
+    --color-border: #9ca3af;
+}
+
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+
+/* For scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #c1c1c1 #ffffff;
+}
