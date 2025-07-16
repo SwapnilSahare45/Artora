@@ -7,6 +7,7 @@ import {
   Phone,
   MapPin,
 } from "lucide-react";
+import logo from "../assets/logo.png";
 
 const Footer = () => {
   return (
@@ -15,7 +16,10 @@ const Footer = () => {
 
         {/* Logo & description */}
         <div>
-          <Link to="/" className="text-2xl font-bold text-primary mb-2 inline-block">ARTORA</Link>
+          <Link to="/" className="flex items-center mb-4">
+            <img src={logo} alt="ARTORA" className="w-12" />
+            <h1 className="text-2xl text-primary inline-block">ARTORA</h1>
+          </Link>
           <p className="text-sm mt-2">
             Discover, buy, and sell incredible artwork from talented artists around the world.
           </p>
@@ -74,7 +78,7 @@ const Footer = () => {
           © {new Date().getFullYear()} Artora. All rights reserved.
         </div>
       </div>
-    </footer>
+    </footer >
   );
 };
 

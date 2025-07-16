@@ -11,6 +11,7 @@ import {
   ShoppingBag,
   Settings,
 } from "lucide-react";
+import logo from "../assets/logo.png"; // Adjust the path as necessary
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -77,9 +78,12 @@ const Navbar = () => {
   return (
     <header className="fixed inset-x-0 top-0 z-50 bg-white dark:bg-gray-900 shadow">
       <div className="max-w-7xl mx-auto flex items-center justify-between px-4 py-3 md:py-4">
-        <Link to="/" className="text-xl font-bold text-primary">
+        <div className="flex items-center">
+          <img src={logo} alt="ARTORA" className="w-8"/>
+          <Link to="/" className="text-primary">
           ARTORA
         </Link>
+        </div>
 
         {/* Desktop nav */}
         <nav className="hidden md:flex items-center gap-6">
