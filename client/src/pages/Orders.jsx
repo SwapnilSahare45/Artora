@@ -52,7 +52,7 @@ const Orders = () => {
             {orders.map((order) => (
               <div
                 key={order.id}
-                className="flex flex-col md:flex-row gap-4 md:items-center justify-between  dark:border-gray-700 rounded-lg p-4 bg-white dark:bg-gray-800 shadow"
+                className="flex flex-col md:flex-row gap-4 md:items-center justify-between dark:border-gray-700 rounded-lg p-4 bg-white dark:bg-gray-800 shadow"
               >
                 {/* Artwork Thumbnail */}
                 <div className="flex gap-4">
