@@ -76,7 +76,7 @@ const Navbar = () => {
 
   /* ─── JSX ───────────────────────────────────── */
   return (
-    <header className="fixed inset-x-0 top-0 z-50 bg-white dark:bg-gray-900 shadow">
+    <header className="fixed inset-x-0 top-0 z-50 bg-white dark:bg-gray-900 border-b dark:border-gray-700 border-gray-200">
       <div className="max-w-7xl mx-auto flex items-center justify-between px-4 py-3 md:py-4">
         <div className="flex items-center">
           <img src={logo} alt="ARTORA" className="w-8"/>
@@ -192,7 +192,6 @@ const Navbar = () => {
           )}
 
           {/* Theme Dropdown */}
-          {/* Theme Dropdown */}
           <div className="relative">
             <button
               onClick={() => setDropdownOpen(!dropdownOpen)}
@@ -201,7 +200,7 @@ const Navbar = () => {
               Theme: {theme.charAt(0).toUpperCase() + theme.slice(1)}
             </button>
             {dropdownOpen && (
-              <ul className="absolute right-0 mt-2 w-32 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded shadow text-sm z-50">
+              <ul className="absolute right-0 mt-2 w-32 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 dark:text-white rounded shadow text-sm z-50">
                 {["light", "dark", "system"].map((option) => (
                   <li
                     key={option}

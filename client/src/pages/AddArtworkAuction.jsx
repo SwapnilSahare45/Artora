@@ -6,11 +6,11 @@ const AddArtworkAuction = () => {
   const [selectedThumbnail, setSelectedThumbnail] = useState(null);
   const [selectedImages, setSelectedImages] = useState([]);
 
-  const categories = ["Painting", "Sculpture", "Digital", "Photography"];
-  const sizes = ["Small", "Medium", "Large"];
-  const mediums = ["Oil", "Acrylic", "Watercolor", "Digital"];
-  const styles = ["Abstract", "Realism", "Impressionism", "Minimalist"];
-  const orientations = ["Portrait", "Landscape", "Square"];
+  const categories = ["Painting", "Sculpture", "Digital", "Photography", "Other"];
+  const sizes = ["Small", "Medium", "Large", "Extra Large", "Custom", "Other"];
+  const mediums = ["Oil", "Acrylic", "Watercolor", "Digital", "Mixed Media", "Other"];
+  const styles = ["Abstract", "Realism", "Impressionism", "Minimalist", "Contemporary", "Other"];
+  const orientations = ["Portrait", "Landscape", "Square", "Panoramic", "Other"];
 
   return (
     <>
@@ -41,7 +41,7 @@ const AddArtworkAuction = () => {
             </div>
 
             {/* Start Date */}
-            <div>
+          <div>
               <label className="block mb-1 font-medium">Start Date</label>
               <input
                 type="datetime-local"
@@ -71,7 +71,7 @@ const AddArtworkAuction = () => {
             {/* Category */}
             <div>
               <label className="block mb-1 font-medium">Category</label>
-              <select className="w-full border border-border bg-muted rounded px-4 py-2 outline-none">
+              <select className="w-full border border-border bg-muted rounded px-4 py-2 outline-none bg-gray-50 text-black dark:bg-gray-900 dark:text-white">
                 <option value="">Select category</option>
                 {categories.map((item, idx) => (
                   <option key={idx} value={item}>{item}</option>
@@ -82,7 +82,7 @@ const AddArtworkAuction = () => {
             {/* Size */}
             <div>
               <label className="block mb-1 font-medium">Size</label>
-              <select className="w-full border border-border bg-muted rounded px-4 py-2 outline-none">
+              <select className="w-full border border-border bg-muted rounded px-4 py-2 outline-none bg-gray-50 text-black dark:bg-gray-900 dark:text-white">
                 <option value="">Select size</option>
                 {sizes.map((item, idx) => (
                   <option key={idx} value={item}>{item}</option>
@@ -93,7 +93,7 @@ const AddArtworkAuction = () => {
             {/* Medium */}
             <div>
               <label className="block mb-1 font-medium">Medium</label>
-              <select className="w-full border border-border bg-muted rounded px-4 py-2 outline-none">
+              <select className="w-full border border-border bg-muted rounded px-4 py-2 outline-none bg-gray-50 text-black dark:bg-gray-900 dark:text-white">
                 <option value="">Select medium</option>
                 {mediums.map((item, idx) => (
                   <option key={idx} value={item}>{item}</option>
@@ -104,7 +104,7 @@ const AddArtworkAuction = () => {
             {/* Style */}
             <div>
               <label className="block mb-1 font-medium">Style</label>
-              <select className="w-full border border-border bg-muted rounded px-4 py-2 outline-none">
+              <select className="w-full border border-border bg-muted rounded px-4 py-2 outline-none bg-gray-50 text-black dark:bg-gray-900 dark:text-white">
                 <option value="">Select style</option>
                 {styles.map((item, idx) => (
                   <option key={idx} value={item}>{item}</option>
@@ -115,7 +115,7 @@ const AddArtworkAuction = () => {
             {/* Orientation */}
             <div>
               <label className="block mb-1 font-medium">Orientation</label>
-              <select className="w-full border border-border bg-muted rounded px-4 py-2 outline-none">
+              <select className="w-full border border-border bg-muted rounded px-4 py-2 outline-none bg-gray-50 text-black dark:bg-gray-900 dark:text-white">
                 <option value="">Select orientation</option>
                 {orientations.map((item, idx) => (
                   <option key={idx} value={item}>{item}</option>

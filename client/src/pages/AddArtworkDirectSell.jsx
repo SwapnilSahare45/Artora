@@ -3,6 +3,13 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
 const AddArtworkDirectSell = () => {
+  // Extended options
+  const categories = ["Painting", "Sculpture", "Digital", "Photography", "Other"];
+  const sizes = ["Small", "Medium", "Large", "Extra Large", "Custom", "Other"];
+  const mediums = ["Oil", "Acrylic", "Watercolor", "Digital", "Mixed Media", "Other"];
+  const styles = ["Abstract", "Realism", "Impressionism", "Minimalist", "Contemporary", "Other"];
+  const orientations = ["Portrait", "Landscape", "Square", "Panoramic", "Other"];
+
   return (
     <>
       <Navbar />
@@ -36,59 +43,69 @@ const AddArtworkDirectSell = () => {
           {/* Category */}
           <div>
             <label className="block mb-1 text-sm font-medium">Category</label>
-            <select className="w-full rounded-lg border border-border bg-muted px-4 py-2 text-sm">
+            <select className="w-full rounded-lg border border-border bg-muted px-4 py-2 text-sm bg-gray-50 text-black dark:bg-gray-900 dark:text-white">
               <option value="">Select Category</option>
-              <option value="painting">Painting</option>
-              <option value="sculpture">Sculpture</option>
-              <option value="photography">Photography</option>
+              {categories.map((item) => (
+                <option key={item} value={item.toLowerCase()}>
+                  {item}
+                </option>
+              ))}
             </select>
           </div>
 
           {/* Size */}
           <div>
             <label className="block mb-1 text-sm font-medium">Size</label>
-            <select className="w-full rounded-lg border border-border bg-muted px-4 py-2 text-sm">
+            <select className="w-full rounded-lg border border-border bg-muted px-4 py-2 text-sm bg-gray-50 text-black dark:bg-gray-900 dark:text-white">
               <option value="">Select Size</option>
-              <option value="small">Small</option>
-              <option value="medium">Medium</option>
-              <option value="large">Large</option>
+              {sizes.map((item) => (
+                <option key={item} value={item.toLowerCase()}>
+                  {item}
+                </option>
+              ))}
             </select>
           </div>
 
           {/* Medium */}
           <div>
             <label className="block mb-1 text-sm font-medium">Medium</label>
-            <select className="w-full rounded-lg border border-border bg-muted px-4 py-2 text-sm">
+            <select className="w-full rounded-lg border border-border bg-muted px-4 py-2 text-sm bg-gray-50 text-black dark:bg-gray-900 dark:text-white">
               <option value="">Select Medium</option>
-              <option value="oil">Oil</option>
-              <option value="acrylic">Acrylic</option>
-              <option value="digital">Digital</option>
+              {mediums.map((item) => (
+                <option key={item} value={item.toLowerCase()}>
+                  {item}
+                </option>
+              ))}
             </select>
           </div>
 
           {/* Style */}
           <div>
             <label className="block mb-1 text-sm font-medium">Style</label>
-            <select className="w-full rounded-lg border border-border bg-muted px-4 py-2 text-sm">
+            <select className="w-full rounded-lg border border-border bg-muted px-4 py-2 text-sm bg-gray-50 text-black dark:bg-gray-900 dark:text-white">
               <option value="">Select Style</option>
-              <option value="abstract">Abstract</option>
-              <option value="realism">Realism</option>
-              <option value="minimal">Minimal</option>
+              {styles.map((item) => (
+                <option key={item} value={item.toLowerCase()}>
+                  {item}
+                </option>
+              ))}
             </select>
           </div>
 
           {/* Orientation */}
           <div>
             <label className="block mb-1 text-sm font-medium">Orientation</label>
-            <select className="w-full rounded-lg border border-border bg-muted px-4 py-2 text-sm">
+            <select className="w-full rounded-lg border border-border bg-muted px-4 py-2 text-sm bg-gray-50 text-black dark:bg-gray-900 dark:text-white">
               <option value="">Select Orientation</option>
-              <option value="portrait">Portrait</option>
-              <option value="landscape">Landscape</option>
-              <option value="square">Square</option>
+              {orientations.map((item) => (
+                <option key={item} value={item.toLowerCase()}>
+                  {item}
+                </option>
+              ))}
             </select>
           </div>
 
-           {/* Thumbnail */}
+          {/* Thumbnail */}
           <div>
             <label className="block mb-1 font-medium">Thumbnail</label>
             <input
