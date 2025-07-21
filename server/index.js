@@ -7,6 +7,7 @@ const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const userRoutes = require("./routes/user.routes");
 const artworkRoutes = require("./routes/artwork.routes");
+const auctionRoutes = require("./routes/auction.routes");
 
 // Connect to the database
 connectDB();
@@ -25,6 +26,7 @@ app.use(cors({
 
 app.use("/api/auth", userRoutes); // Routes for user authentication
 app.use("/api/artworks", artworkRoutes); // Routes for artwork management
+app.use("/api/auctions", auctionRoutes); // Routes for auction management
 
 // Start the server and listen on the specified port
 app.listen(process.env.PORT || 5000, () => {

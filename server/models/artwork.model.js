@@ -8,26 +8,22 @@ const artworkSchema = new mongoose.Schema({
     inAuction: {
         type: Boolean,
         default: false,
-        required:true,
+        required: true,
+    },
+    auctionId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Auction",
+        required: function () {
+            return this.inAuction;
+        },
     },
     auctionName: {
-        type: String,
+        type: mongoose.Schema.Types.String,
+        ref:"Auction",
         required: function () {
             return this.inAuction;
         },
         trim: true,
-    },
-    auctionStartDate: {
-        type: Date,
-        required: function () {
-            return this.inAuction;
-        },
-    },
-    auctionEndDate: {
-        type: Date,
-        required: function () {
-            return this.inAuction;
-        },
     },
     openingBid: {
         type: Number,
@@ -40,7 +36,7 @@ const artworkSchema = new mongoose.Schema({
         required: function () {
             return !this.inAuction;
         },
-        min:1
+        min: 1
     },
     title: {
         type: String,
@@ -96,7 +92,6 @@ const artworkSchema = new mongoose.Schema({
     }
 )
 
-
 // Create a text index on multiple fields for efficient text search
 artworkSchema.index({
     title: 'text',
@@ -111,7 +106,7 @@ artworkSchema.index({
 });
 
 // Create an index on the owner field for faster queries by owner
-artworkSchema.index({owner:1});
+artworkSchema.index({ owner: 1 });
 
 const Artwork = mongoose.model("Artwork", artworkSchema);
 module.exports = Artwork;

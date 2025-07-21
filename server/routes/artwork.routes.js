@@ -1,6 +1,6 @@
 const express = require("express");
 const upload = require("../util/multer.config");
-const { addArtworkDirect, getArtworks, getArtworkById, updateArtwork } = require("../controllers/artwork.controller");
+const { addArtworkDirect, getArtworks, getArtworkById, updateArtwork, deleteAuction } = require("../controllers/artwork.controller");
 
 const router = express.Router();
 
@@ -12,6 +12,8 @@ router.get("/", getArtworks); // Route to get all artworks
 router.get("/:id", getArtworkById); // Route to get a specific artwork by ID
 
 // Route to update an artwork with file uploads (thumbnail and images)
-router.put("/:id", upload.fields([{name:'thumbnail', maxCount:1}, {name:'images', maxCount:8}]), updateArtwork);
+router.put("/:id", upload.fields([{ name: 'thumbnail', maxCount: 1 }, { name: 'images', maxCount: 8 }]), updateArtwork);
+
+router.delete("/:id", deleteAuction); // Route to delete artwork
 
 module.exports = router;
