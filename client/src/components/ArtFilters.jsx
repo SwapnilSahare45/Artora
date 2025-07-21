@@ -28,17 +28,17 @@ const ArtFilters = () => {
 
       <FilterSection
         title="Category"
-        options={['Painting', 'Digital Art', 'Sculpture', 'Photography', 'Mixed Media']}
+        options={["Painting", "Sculpture", "Digital", "Photography", "Other"]}
       />
 
       <FilterSection
         title="Size"
-        options={['A4', 'A3', 'A2', 'Canvas', 'Custom']}
+        options={["Small", "Medium", "Large", "Extra Large", "Custom", "Other"]}
       />
 
       <FilterSection
         title="Medium"
-        options={['Oil', 'Acrylic', 'Watercolor', 'Ink', 'Charcoal', 'Digital', 'Mixed Media']}
+        options={["Oil", "Acrylic", "Watercolor", "Digital", "Mixed Media", "Other"]}
       />
 
       <div className="mb-6 px-4">
@@ -52,12 +52,12 @@ const ArtFilters = () => {
 
       <FilterSection
         title="Style"
-        options={['Abstract', 'Realism', 'Modern', 'Classic', 'Fantasy', 'Minimalist']}
+        options={["Abstract", "Realism", "Impressionism", "Minimalist", "Contemporary", "Other"]}
       />
 
       <FilterSection
         title="Orientation"
-        options={['Portrait', 'Landscape', 'Square']}
+       options={["Portrait", "Landscape", "Square", "Panoramic", "Other"]}
       />
 
       <FilterSection
