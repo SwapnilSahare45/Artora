@@ -8,21 +8,23 @@ const userSchema = new mongoose.Schema({
     },
     email: {
         type: String,
-        required: () => {
+        required: function () {
             return !this.googleId;
         },
+        lowercase: true,
+        trim: true,
         unique: true,
         sparse: true,
     },
     password: {
         type: String,
-        required: () => {
+        required: function () {
             return !this.googleId;
         },
     },
     googleId: {
         type: String,
-        required: () => {
+        required: function () {
             return !this.password;
         },
         unique: true,
@@ -37,6 +39,7 @@ const userSchema = new mongoose.Schema({
     }
 );
 
+// Hash the password before saving the user document
 userSchema.pre('save', async function (next) {
     if (!this.isModified('password')) return next();
     try {
