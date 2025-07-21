@@ -40,24 +40,6 @@ const AddArtworkAuction = () => {
               />
             </div>
 
-            {/* Start Date */}
-          <div>
-              <label className="block mb-1 font-medium">Start Date</label>
-              <input
-                type="datetime-local"
-                className="w-full border border-border bg-muted rounded px-4 py-2 outline-none"
-              />
-            </div>
-
-            {/* End Date */}
-            <div>
-              <label className="block mb-1 font-medium">End Date</label>
-              <input
-                type="datetime-local"
-                className="w-full border border-border bg-muted rounded px-4 py-2 outline-none"
-              />
-            </div>
-
             {/* Art Name */}
             <div>
               <label className="block mb-1 font-medium">Art Name</label>
