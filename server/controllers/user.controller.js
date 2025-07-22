@@ -2,6 +2,9 @@ const validator = require("validator");
 const User = require("../models/user.model");
 const generateToken = require("../util/generateToken");
 const bcrypt = require("bcryptjs");
+const Otp = require("../models/otp.model");
+const { sendOTP } = require("../util/mailer");
+const cloudinary = require("../util/cloudinary.config");
 
 exports.register = async (req, res) => {
     try {
@@ -25,38 +28,50 @@ exports.register = async (req, res) => {
         // Check if user already exists
         const existingUser = await User.findOne({ email });
 
-        if (existingUser) {
+        if (existingUser && existingUser.isVerified) {
             return res.status(400).json({ message: 'User already exists' });
         }
 
-        // Create new user
-        const user = await User.create({
-            name,
-            email,
-            password
-        });
+        const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
 
-        // Generate token and set cookie
-        const token = generateToken(user._id);
-        res.cookie('token', token, {
-            httpOnly: true,
-            sameSite: 'Lax',
-            secure: process.env.NODE_ENV === 'production',
-            maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
-        });
+        if (existingUser) {
+            // User exists but not verified
+            existingUser.password = password,
+                await existingUser.save();
+            await Otp.create({ email, code: otpCode }); // Save OTP in database
+        } else {
+            // If user not exists then create new user
+            await User.create({
+                name,
+                email,
+                password,
+            });
+            await Otp.create({ email, code: otpCode }); // Save OTP in database
+        }
 
-        res.status(201).json({
-            message: 'User registered successfully',
-            user: {
-                id: user._id,
-                name: user.name,
-                email: user.email,
-            }
-        });
+        // Send OTP to user's email
+        await sendOTP(email, otpCode);
+
+        res.status(201).json({ message: "OTP sent to email. Please verify." });
+
     } catch (error) {
         res.status(500).json({ message: 'Server error', error: error.message });
     }
 }
+
+exports.verifyOtp = async (req, res) => {
+    const { email, code } = req.body;
+
+    // Find OTP document matching the provided email and code
+    const validOtp = await Otp.findOne({ email, code });
+    if (!validOtp) return res.status(400).json({ message: "Invalid or expired OTP" });
+
+    await User.findOneAndUpdate({ email }, { isVerified: true });
+    await Otp.deleteMany({ email }); // Clear old OTPs
+
+    res.json({ message: "Email verified successfully" });
+};
+
 
 exports.login = async (req, res) => {
     try {
@@ -75,6 +90,11 @@ exports.login = async (req, res) => {
 
         if (!user) {
             return res.status(400).json({ message: 'User not found' });
+        }
+
+        // Check user email is verified
+        if (!user.isVerified) {
+            return res.status(403).json({ message: "Please verify your email via otp before logging in." });
         }
 
         // Check password
@@ -102,5 +122,78 @@ exports.login = async (req, res) => {
         });
     } catch (error) {
         res.status(500).json({ message: 'Server error', error: error.message });
+    }
+}
+
+exports.getMe = async (req, res) => {
+    try {
+        const user = req.user; // Already populated by middleware
+
+        res.status(200).json({ user });
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+}
+
+exports.updateMe = async (req, res) => {
+    try {
+        const myId = req.user._id;
+        const { name, bio } = req.body || {};
+        let avatarUrl = req.user.avatar;
+
+        // Check if there is anything to update
+        if(!name && !bio && !req.file){
+            return res.status(400).json({message:'No update fields provided'});
+        }
+
+        // If new avatar is upload
+        if (req.file) {
+            const result = await new Promise((resolve, reject) => {
+                const stream = cloudinary.uploader.upload_stream(
+                    { folder: 'artora-avatar' },
+                    (error, result) => {
+                        if (error) reject(error);
+                        else resolve(result);
+                    }
+                );
+                stream.end(req.file.buffer);
+            });
+            avatarUrl = result.secure_url;
+        }
+
+        const updatedMe = await User.findByIdAndUpdate(
+            myId,
+            {
+                name: name || req.user.name,
+                bio: bio || req.user.bio,
+                avatar: avatarUrl
+            },
+            { new: true, runValidators: true }
+        );
+
+        res.status(200).json({
+            message: "Profile updated successfully",
+            updatedMe,
+        })
+
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+}
+
+exports.getProfile = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        // Find user by ID and exclude password field from the result
+        const user = await User.findById(id).select("-password");
+
+        if (!user) {
+            return res.status(404).json({ message: "No user found" });
+        }
+
+        res.status(200).json({ user });
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error: error.message });
     }
 }

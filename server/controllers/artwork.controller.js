@@ -1,39 +1,46 @@
 const Artwork = require("../models/artwork.model");
 const cloudinary = require("../util/cloudinary.config");
 
-exports.addArtworkDirect = async (req, res) => {
+exports.addArtwork = async (req, res) => {
   try {
-    const { owner, title, price, artist, category, size, medium, style, orientation, description } = req.body;
+    const { auctionId, auctionName, owner, title, price, openingBid, artist, category, size, medium, style, orientation, description } = req.body;
 
-    // Get the uploaded thumbnail and images file from req.files
     const thumbnailFile = req.files?.thumbnail?.[0];
     const imageFiles = req.files?.images;
 
-    if (!owner || !title || !price || !artist || !category || !size || !medium || !style || !orientation || !description || !thumbnailFile || !imageFiles) {
+    if (
+      !owner || !title || !artist || !category || !size || !medium || !style ||
+      !orientation || !description || !thumbnailFile || !imageFiles
+    ) {
       return res.status(400).json({ message: "All fields and files are required" });
     }
 
-    // Validate the price greater then 0
-    if (price <= 0) {
-      return res.status(400).json({ message: "Price must be greater than 0" });
+    let isAuction = !!auctionId && !!auctionName && !!openingBid;
+
+    // Validate price or openingBid
+    if (isAuction) {
+      if (openingBid <= 0) {
+        return res.status(400).json({ message: "Opening bid must be greater than 0" });
+      }
+    } else {
+      if (!price || price <= 0) {
+        return res.status(400).json({ message: "Price must be greater than 0" });
+      }
     }
 
-    // Upload the artwork thumbnail image to cloudinary
+    // Upload thumbnail
     const artworkThumbnailImage = await new Promise((resolve, reject) => {
       const stream = cloudinary.uploader.upload_stream(
         { folder: 'artora-artwork-thumbnail' },
         (error, result) => {
-          if (error) {
-            reject(new Error("Thumbnail upload failed"));
-          } else {
-            resolve(result.secure_url);
-          }
+          if (error) reject(new Error("Thumbnail upload failed"));
+          else resolve(result.secure_url);
         }
       );
       stream.end(thumbnailFile.buffer);
-    })
+    });
 
-    // Upload the artwork images to cloudinary
+    // Upload images
     const artworkImages = await Promise.all(
       imageFiles.map(file =>
         new Promise((resolve, reject) => {
@@ -49,15 +56,37 @@ exports.addArtworkDirect = async (req, res) => {
       )
     );
 
-    // Create a artwork
-    const artwork = await Artwork.create({ owner, title, price, artist, category, size, medium, style, orientation, description, thumbnail: artworkThumbnailImage, images: artworkImages });
+    const artworkData = {
+      owner,
+      title,
+      artist,
+      category,
+      size,
+      medium,
+      style,
+      orientation,
+      description,
+      thumbnail: artworkThumbnailImage,
+      images: artworkImages,
+      inAuction: isAuction
+    };
+
+    if (isAuction) {
+      artworkData.auctionId = auctionId;
+      artworkData.auctionName = auctionName;
+      artworkData.openingBid = openingBid;
+    } else {
+      artworkData.price = price;
+    }
+
+    const artwork = await Artwork.create(artworkData); // Create an artwork
 
     res.status(201).json({ message: "Artwork added successfully", artwork });
 
   } catch (error) {
-    res.status(500).json({ message: "server error", error: error.message });
+    res.status(500).json({ message: "Server error", error: error.message });
   }
-}
+};
 
 exports.getArtworks = async (req, res) => {
   try {
@@ -131,18 +160,17 @@ exports.updateArtwork = async (req, res) => {
     const { id } = req.params;
     const updateFields = req.body;
 
-    // Get the uploaded thumbnail and images file from req.files
+    // Uploaded files
     const thumbnailFile = req.files?.thumbnail?.[0];
     const imageFiles = req.files?.images;
 
-    // Only allow specific fields to be updated
+    // Allow only safe fields
     const allowedFields = [
       "title", "price", "artist", "category", "size", "medium", "style",
       "orientation", "description", "auctionName", "auctionStartDate",
-      "auctionEndDate", "openingBid", "inAuction"
+      "auctionEndDate", "openingBid", "inAuction", "auctionId"
     ];
 
-    // Sanitize update fields to only allow specific fields
     const sanitizedUpdate = {};
     for (const key of allowedFields) {
       if (updateFields[key] !== undefined) {
@@ -150,17 +178,29 @@ exports.updateArtwork = async (req, res) => {
       }
     }
 
-    // If a new thumbnail file is uploaded, upload it to Cloudinary and update the thumbnail field
+    const isAuction = sanitizedUpdate.inAuction === "true" || sanitizedUpdate.inAuction === true;
+
+    // Validate price/bid
+    if (isAuction) {
+      if (!sanitizedUpdate.openingBid || sanitizedUpdate.openingBid <= 0) {
+        return res.status(400).json({ message: "Opening bid must be greater than 0" });
+      }
+      sanitizedUpdate.price = undefined; // remove direct price if switching to auction
+    } else {
+      if (!sanitizedUpdate.price || sanitizedUpdate.price <= 0) {
+        return res.status(400).json({ message: "Price must be greater than 0" });
+      }
+      sanitizedUpdate.openingBid = undefined; // remove auction field if switching to direct
+    }
+
+    // Upload thumbnail if updated
     if (thumbnailFile) {
       const artworkThumbnailImage = await new Promise((resolve, reject) => {
         const stream = cloudinary.uploader.upload_stream(
-          { folder: 'artora-artwork-thumbnail' },
+          { folder: "artora-artwork-thumbnail" },
           (error, result) => {
-            if (error) {
-              reject(new Error("Thumbnail upload failed"));
-            } else {
-              resolve(result.secure_url);
-            }
+            if (error) reject(new Error("Thumbnail upload failed"));
+            else resolve(result.secure_url);
           }
         );
         stream.end(thumbnailFile.buffer);
@@ -168,13 +208,13 @@ exports.updateArtwork = async (req, res) => {
       sanitizedUpdate.thumbnail = artworkThumbnailImage;
     }
 
-    // If a new artwork images file is uploaded, upload it to Cloudinary and update the artwork images field
+    // Upload new images if provided
     if (imageFiles && imageFiles.length > 0) {
       const artworkImages = await Promise.all(
         imageFiles.map(file =>
           new Promise((resolve, reject) => {
             const stream = cloudinary.uploader.upload_stream(
-              { folder: 'artora-artwork-images' },
+              { folder: "artora-artwork-images" },
               (error, result) => {
                 if (error) reject(new Error("Image upload failed"));
                 else resolve(result.secure_url);
@@ -187,10 +227,10 @@ exports.updateArtwork = async (req, res) => {
       sanitizedUpdate.images = artworkImages;
     }
 
-    // Update the artwork document in the database
+    // Update artwork
     const updatedArtwork = await Artwork.findByIdAndUpdate(id, sanitizedUpdate, {
-      new: true,           // Return the updated document
-      runValidators: true, // Run schema validators on update
+      new: true,
+      runValidators: true,
     });
 
     if (!updatedArtwork) {
@@ -202,21 +242,37 @@ exports.updateArtwork = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
   }
-}
+};
 
 exports.deleteAuction = async (req, res) => {
   try {
-    const {id}= req.params;
+    const { id } = req.params;
 
     // Find artwork by id and delete
     const deletedArtwork = await Artwork.findByIdAndDelete(id);
 
-    if(!deletedArtwork){
-      res.status(404).json({message:"Artwork not found"});
+    if (!deletedArtwork) {
+      res.status(404).json({ message: "Artwork not found" });
     }
 
-    res.status(200).json({message:"Artwork deleted successfully"});
+    res.status(200).json({ message: "Artwork deleted successfully" });
   } catch (error) {
-    res.status(500).json({message:"Server error", error:error.message});
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+}
+
+exports.getMyArtworks = async (req, res) => {
+  try {
+    const myId = req.user._id;
+
+    const artworks = await Artwork.find({ owner: myId }); // Find all the artworks for owner
+
+    if(!artworks){
+      return res.status(404).json({message: "No artworks found"});
+    }
+
+    res.status(200).json({artworks});
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 }

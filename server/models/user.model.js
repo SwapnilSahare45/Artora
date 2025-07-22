@@ -30,9 +30,19 @@ const userSchema = new mongoose.Schema({
         unique: true,
         sparse: true,
     },
+    isVerified: {
+        type: Boolean,
+        default: false,
+        required: true,
+    },
     avatar: {
         type: String,
+        default:"https://res.cloudinary.com/drknlre9y/image/upload/v1753180352/artora-artwork-thumbnail/rcogwgtamntcq75l6acd.png",
+        required:true,
     },
+    bio:{
+        type:String,
+    }
 },
     {
         timestamps: true,
