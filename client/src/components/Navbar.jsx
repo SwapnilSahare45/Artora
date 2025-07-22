@@ -155,7 +155,7 @@ const Navbar = () => {
               </NavLink>
 
               {/* Profile dropdown */}
-              <div className="group relative">
+              <div className="group relative bg-gray-50 text-black dark:bg-gray-900 dark:text-white">
                 <img
                   src={userAvatar}
                   alt="profile"

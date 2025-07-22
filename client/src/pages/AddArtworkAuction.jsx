@@ -15,132 +15,87 @@ const AddArtworkAuction = () => {
   return (
     <>
       <Navbar />
-      <main className="px-4 py-8 md:px-16 pt-24 bg-gray-50 text-black dark:bg-gray-900 dark:text-white">
-        <div className="flex-1 px-4 py-8 md:px-24">
+      <main className="bg-gray-50 dark:bg-gray-900 text-black dark:text-white min-h-screen pt-24 px-6 md:px-16 pb-10">
+        <section className="max-w-5xl mx-auto bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg">
           <h1 className="text-3xl font-bold mb-8 text-center">Add Artwork for Auction</h1>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Auction Name */}
             <div>
-              <label className="block mb-1 font-medium">Auction Name</label>
-              <input
-                type="text"
-                placeholder="Enter auction title"
-                className="w-full border border-border bg-muted rounded px-4 py-2 outline-none"
-              />
+              <label className="block mb-2 font-medium">Auction Name</label>
+              <input type="text" placeholder="Enter auction title" className="w-full border border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-700 text-black dark:text-white rounded px-4 py-2 focus:ring-2 focus:ring-primary outline-none" />
             </div>
 
-            {/* Opening Bid */}
             <div>
-              <label className="block mb-1 font-medium">Opening Bid</label>
-              <input
-                type="number"
-                placeholder="Enter minimum bid"
-                className="w-full border border-border bg-muted rounded px-4 py-2 outline-none"
-              />
+              <label className="block mb-2 font-medium">Opening Bid</label>
+              <input type="number" placeholder="Enter minimum bid" className="w-full border border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-700 text-black dark:text-white rounded px-4 py-2 focus:ring-2 focus:ring-primary outline-none" />
             </div>
 
-            {/* Art Name */}
             <div>
-              <label className="block mb-1 font-medium">Art Name</label>
-              <input
-                type="text"
-                placeholder="Title of the artwork"
-                className="w-full border border-border bg-muted rounded px-4 py-2 outline-none"
-              />
+              <label className="block mb-2 font-medium">Art Name</label>
+              <input type="text" placeholder="Enter artwork name" className="w-full border border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-700 text-black dark:text-white rounded px-4 py-2 focus:ring-2 focus:ring-primary outline-none" />
             </div>
 
-            {/* Category */}
             <div>
-              <label className="block mb-1 font-medium">Category</label>
-              <select className="w-full border border-border bg-muted rounded px-4 py-2 outline-none bg-gray-50 text-black dark:bg-gray-900 dark:text-white">
+              <label className="block mb-2 font-medium">Category</label>
+              <select className="w-full border border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-700 text-black dark:text-white rounded px-4 py-2 outline-none">
                 <option value="">Select category</option>
-                {categories.map((item, idx) => (
-                  <option key={idx} value={item}>{item}</option>
-                ))}
+                {categories.map((cat, i) => <option key={i} value={cat}>{cat}</option>)}
               </select>
             </div>
 
-            {/* Size */}
             <div>
-              <label className="block mb-1 font-medium">Size</label>
-              <select className="w-full border border-border bg-muted rounded px-4 py-2 outline-none bg-gray-50 text-black dark:bg-gray-900 dark:text-white">
+              <label className="block mb-2 font-medium">Size</label>
+              <select className="w-full border border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-700 text-black dark:text-white rounded px-4 py-2 outline-none">
                 <option value="">Select size</option>
-                {sizes.map((item, idx) => (
-                  <option key={idx} value={item}>{item}</option>
-                ))}
+                {sizes.map((item, i) => <option key={i} value={item}>{item}</option>)}
               </select>
             </div>
 
-            {/* Medium */}
             <div>
-              <label className="block mb-1 font-medium">Medium</label>
-              <select className="w-full border border-border bg-muted rounded px-4 py-2 outline-none bg-gray-50 text-black dark:bg-gray-900 dark:text-white">
+              <label className="block mb-2 font-medium">Medium</label>
+              <select className="w-full border border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-700 text-black dark:text-white rounded px-4 py-2 outline-none">
                 <option value="">Select medium</option>
-                {mediums.map((item, idx) => (
-                  <option key={idx} value={item}>{item}</option>
-                ))}
+                {mediums.map((item, i) => <option key={i} value={item}>{item}</option>)}
               </select>
             </div>
 
-            {/* Style */}
             <div>
-              <label className="block mb-1 font-medium">Style</label>
-              <select className="w-full border border-border bg-muted rounded px-4 py-2 outline-none bg-gray-50 text-black dark:bg-gray-900 dark:text-white">
+              <label className="block mb-2 font-medium">Style</label>
+              <select className="w-full border border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-700 text-black dark:text-white rounded px-4 py-2 outline-none">
                 <option value="">Select style</option>
-                {styles.map((item, idx) => (
-                  <option key={idx} value={item}>{item}</option>
-                ))}
+                {styles.map((item, i) => <option key={i} value={item}>{item}</option>)}
               </select>
             </div>
 
-            {/* Orientation */}
             <div>
-              <label className="block mb-1 font-medium">Orientation</label>
-              <select className="w-full border border-border bg-muted rounded px-4 py-2 outline-none bg-gray-50 text-black dark:bg-gray-900 dark:text-white">
+              <label className="block mb-2 font-medium">Orientation</label>
+              <select className="w-full border border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-700 text-black dark:text-white rounded px-4 py-2 outline-none">
                 <option value="">Select orientation</option>
-                {orientations.map((item, idx) => (
-                  <option key={idx} value={item}>{item}</option>
-                ))}
+                {orientations.map((item, i) => <option key={i} value={item}>{item}</option>)}
               </select>
             </div>
 
-            {/* Description */}
             <div className="md:col-span-2">
-              <label className="block mb-1 font-medium">Description</label>
-              <textarea
-                rows={4}
-                placeholder="Describe your artwork"
-                className="w-full border border-border bg-muted rounded px-4 py-2 outline-none"
-              ></textarea>
+              <label className="block mb-2 font-medium">Description</label>
+              <textarea rows="4" placeholder="Describe your artwork" className="w-full border border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-700 text-black dark:text-white rounded px-4 py-2 outline-none"></textarea>
             </div>
 
-            {/* Thumbnail */}
             <div>
-              <label className="block mb-1 font-medium">Thumbnail</label>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={(e) => setSelectedThumbnail(e.target.files[0])}
-                className="w-full border border-border bg-muted rounded px-4 py-2"
-              />
+              <label className="block mb-2 font-medium">Thumbnail</label>
+              <input type="file" accept="image/*" onChange={(e) => setSelectedThumbnail(e.target.files[0])} className="w-full bg-white dark:bg-gray-800 text-black dark:text-white border border-gray-300 dark:border-gray-700 rounded px-4 py-2" />
             </div>
 
-            {/* Additional Images */}
             <div>
-              <label className="block mb-1 font-medium">Other Images</label>
-              <input
-                type="file"
-                multiple
-                accept="image/*"
-                onChange={(e) => setSelectedImages([...e.target.files])}
-                className="w-full border border-border bg-muted rounded px-4 py-2"
-              />
+              <label className="block mb-2 font-medium">Other Images</label>
+              <input type="file" multiple accept="image/*" onChange={(e) => setSelectedImages([...e.target.files])} className="w-full bg-white dark:bg-gray-800 text-black dark:text-white border border-gray-300 dark:border-gray-700 rounded px-4 py-2" />
+            </div>
+
+            <div className="md:col-span-2 text-center pt-4">
+              <button className="bg-black dark:bg-white text-white dark:text-black px-6 py-2 rounded-lg font-medium hover:opacity-90 transition">Submit Artwork</button>
             </div>
           </div>
-        </div>
+        </section>
       </main>
-
       <Footer />
     </>
   );

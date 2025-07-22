@@ -1,17 +1,33 @@
 import { useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { Pencil } from "lucide-react";
 
-const settingsTabs = ["Profile", "Privacy", "Notifications", "Theme", "Security"];
+const settingsTabs = ["Profile", "Security"];
 
 const Settings = () => {
   const [activeTab, setActiveTab] = useState("Profile");
+
+  const [username, setUsername] = useState("John Doe");
+  const [bio, setBio] = useState("Artist | Painter | Dreamer");
+  const [profilePic, setProfilePic] = useState("/default-profile.png");
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setProfilePic(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   return (
     <main className="min-h-screen bg-gray-50 dark:bg-gray-900 text-black dark:text-white">
       <Navbar />
 
-      <div className="pt-28 pb-16 px-4 md:px-12 lg:px-24 max-w-6xl mx-auto flex flex-col md:flex-row gap-8">
+      <div className="pt-28 pb-16 px-4 md:px-12 lg:px-24 max-w-4xl mx-auto flex flex-col md:flex-row gap-8">
         {/* Sidebar */}
         <aside className="w-full md:w-1/4 border-r border-gray-200 dark:border-gray-700 px-4">
           <ul className="space-y-2">
@@ -32,82 +48,62 @@ const Settings = () => {
           </ul>
         </aside>
 
-        {/* Content */}
+        {/* Main Content */}
         <section className="w-full md:w-3/4">
           {activeTab === "Profile" && (
             <div className="space-y-6">
               <h2 className="text-2xl font-semibold">Profile Settings</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <input
-                  type="text"
-                  placeholder="Full Name"
-                  className="p-3 rounded border dark:border-gray-600 bg-white dark:bg-gray-800"
+
+              {/* Profile Picture Upload */}
+              <div className="relative w-24 h-24">
+                <img
+                  src={profilePic}
+                  alt="Profile"
+                  className="w-24 h-24 rounded-full object-cover border dark:border-gray-600"
                 />
-                <input
-                  type="text"
-                  placeholder="Username"
-                  className="p-3 rounded border dark:border-gray-600 bg-white dark:bg-gray-800"
-                />
+                <label
+                  htmlFor="profileUpload"
+                  className="absolute bottom-0 right-0 bg-primary p-1.5 rounded-full cursor-pointer"
+                >
+                  <Pencil size={16} className="text-white" />
+                  <input
+                    type="file"
+                    id="profileUpload"
+                    accept="image/*"
+                    onChange={handleImageChange}
+                    className="hidden"
+                  />
+                </label>
               </div>
+
+              {/* Username Input */}
               <input
-                type="email"
-                placeholder="Email Address"
-                className="p-3 w-full rounded border dark:border-gray-600 bg-white dark:bg-gray-800"
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                placeholder="Username"
+                className="w-full p-3 rounded border dark:border-gray-600 bg-white dark:bg-gray-800"
               />
-            </div>
-          )}
 
-          {activeTab === "Privacy" && (
-            <div className="space-y-6">
-              <h2 className="text-2xl font-semibold">Privacy</h2>
-              <div className="flex justify-between items-center p-4 border rounded dark:border-gray-600 bg-white dark:bg-gray-800">
-                <p>Make my profile private</p>
-                <input type="checkbox" className="w-5 h-5" />
-              </div>
-              <div className="flex justify-between items-center p-4 border rounded dark:border-gray-600 bg-white dark:bg-gray-800">
-                <p>Hide activity status</p>
-                <input type="checkbox" className="w-5 h-5" />
-              </div>
-            </div>
-          )}
+              {/* Bio Input */}
+              <textarea
+                value={bio}
+                onChange={(e) => setBio(e.target.value)}
+                placeholder="Write a short bio..."
+                rows={4}
+                className="w-full p-3 rounded border dark:border-gray-600 bg-white dark:bg-gray-800"
+              />
 
-          {activeTab === "Notifications" && (
-            <div className="space-y-6">
-              <h2 className="text-2xl font-semibold">Notification Settings</h2>
-              <div className="flex justify-between items-center p-4 border rounded dark:border-gray-600 bg-white dark:bg-gray-800">
-                <p>Email Notifications</p>
-                <input type="checkbox" className="w-5 h-5" />
-              </div>
-              <div className="flex justify-between items-center p-4 border rounded dark:border-gray-600 bg-white dark:bg-gray-800">
-                <p>Push Notifications</p>
-                <input type="checkbox" className="w-5 h-5" />
-              </div>
-            </div>
-          )}
-
-          {activeTab === "Theme" && (
-            <div className="space-y-6">
-              <h2 className="text-2xl font-semibold">Theme Settings</h2>
-              <div className="space-y-2">
-                <label className="flex items-center gap-2">
-                  <input type="radio" name="theme" defaultChecked />
-                  Light Mode
-                </label>
-                <label className="flex items-center gap-2">
-                  <input type="radio" name="theme" />
-                  Dark Mode
-                </label>
-                <label className="flex items-center gap-2">
-                  <input type="radio" name="theme" />
-                  System Default
-                </label>
-              </div>
+              {/* Save Button */}
+              <button className="bg-primary text-white px-6 py-2 rounded hover:bg-primary/90 transition">
+                Save Changes
+              </button>
             </div>
           )}
 
           {activeTab === "Security" && (
             <div className="space-y-6">
-              <h2 className="text-2xl font-semibold">Security</h2>
+              <h2 className="text-2xl font-semibold">Security Settings</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <input
                   type="password"
@@ -120,7 +116,7 @@ const Settings = () => {
                   className="p-3 rounded border dark:border-gray-600 bg-white dark:bg-gray-800"
                 />
               </div>
-              <button className="mt-4 bg-primary text-white px-6 py-2 rounded hover:bg-primary/90 transition">
+              <button className="bg-primary text-white px-6 py-2 rounded hover:bg-primary/90 transition">
                 Change Password
               </button>
             </div>

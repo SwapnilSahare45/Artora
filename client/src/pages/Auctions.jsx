@@ -8,7 +8,6 @@ const Auctions = () => {
 
   const handleSortChange = (e) => {
     setSortOption(e.target.value);
-    // Sorting logic will be implemented when connected to backend or data
   };
 
   return (
@@ -31,14 +30,6 @@ const Auctions = () => {
               <option value="end-desc">End Date ↓</option>
               <option value="end-asc">End Date ↑</option>
             </select>
-
-            {/* ➕ Add Auction Button */}
-            <Link
-              to="/add-artwork-auction"
-              className="bg-primary text-white px-4 py-2 rounded hover:bg-opacity-90 transition"
-            >
-              Add Artwork to Auction
-            </Link>
           </div>
         </div>
 

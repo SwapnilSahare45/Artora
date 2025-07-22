@@ -2,7 +2,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ArtworkCard from "@/components/ArtworkCard";
 import AuctionFilter from "@/components/AuctionFilters";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 
 const Auction = () => {
   const { id } = useParams();
@@ -12,11 +12,21 @@ const Auction = () => {
       <Navbar />
 
       <section className="pt-28 pb-12 px-4 md:px-8 lg:px-24">
-        <div className="mb-8">
-          <h1 className="text-3xl font-semibold mb-2 text-center">Auction #{id}</h1>
-          <p className="text-gray-600 dark:text-gray-300 text-center max-w-2xl mx-auto">
-            Browse and bid on exclusive artworks available in this curated auction collection.
-          </p>
+        <div className="mb-8 flex justify-between">
+          <div>
+            <h1 className="text-3xl font-semibold mb-2">Auction #{id}</h1>
+            <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+              Browse and bid on exclusive artworks available in this curated auction collection.
+            </p>
+          </div>
+
+          {/* ➕ Add Auction Button */}
+          <Link
+            to={`/add-artwork-auction/${id}`}
+            className="bg-primary text-white px-4 py-2 self-start rounded hover:bg-opacity-90 transition"
+          >
+            Add Artwork to Auction
+          </Link>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">

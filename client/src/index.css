@@ -11,3 +11,7 @@
   scrollbar-width: thin;
   scrollbar-color: #c1c1c1 #ffffff;
 }
+
+.quick-link {
+  @apply flex flex-col items-center justify-center bg-white dark:bg-gray-800 p-6 rounded-lg shadow hover:bg-gray-100 dark:hover:bg-gray-700 transition text-sm font-medium;
+}

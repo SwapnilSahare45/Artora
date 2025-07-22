@@ -37,7 +37,7 @@ const AppRoutes = () => {
                 <Route path="orders" element={<Orders />} />
                 <Route path='order/:id' element={<Order/>}/>
                 <Route path="add-artwork-direct" element={<AddArtworkDirectSell/>} />
-                <Route path='add-artwork-auction' element={<AddArtworkAuction/>}/>
+                <Route path='add-artwork-auction/:id' element={<AddArtworkAuction/>}/>
                 <Route path="feedback" element={<FeedbackForm />} />
                 <Route path="wishlist" element={<Wishlist />} />
                 <Route path="notifications" element={<Notifications />} />
