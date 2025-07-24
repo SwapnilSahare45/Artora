@@ -127,9 +127,9 @@ exports.login = async (req, res) => {
 
 exports.getMe = async (req, res) => {
     try {
-        const user = req.user; // Already populated by middleware
+        const userId = req.user; // Already populated by middleware
 
-        res.status(200).json({ user });
+        res.status(200).json({ userId });
     } catch (error) {
         res.status(500).json({ message: "Server error", error: error.message });
     }
@@ -137,7 +137,7 @@ exports.getMe = async (req, res) => {
 
 exports.updateMe = async (req, res) => {
     try {
-        const myId = req.user._id;
+        const userId = req.user._id;
         const { name, bio } = req.body || {};
         let avatarUrl = req.user.avatar;
 
@@ -162,7 +162,7 @@ exports.updateMe = async (req, res) => {
         }
 
         const updatedMe = await User.findByIdAndUpdate(
-            myId,
+            userId,
             {
                 name: name || req.user.name,
                 bio: bio || req.user.bio,

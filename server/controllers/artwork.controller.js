@@ -1,9 +1,11 @@
 const Artwork = require("../models/artwork.model");
+const Bid = require("../models/bid.model");
 const cloudinary = require("../util/cloudinary.config");
 
 exports.addArtwork = async (req, res) => {
   try {
-    const { auctionId, auctionName, owner, title, price, openingBid, artist, category, size, medium, style, orientation, description } = req.body;
+    const owner = req.user._id;
+    const { auctionId, title, price, openingBid, artist, category, size, medium, style, orientation, description } = req.body;
 
     const thumbnailFile = req.files?.thumbnail?.[0];
     const imageFiles = req.files?.images;
@@ -15,7 +17,7 @@ exports.addArtwork = async (req, res) => {
       return res.status(400).json({ message: "All fields and files are required" });
     }
 
-    let isAuction = !!auctionId && !!auctionName && !!openingBid;
+    let isAuction = !!auctionId && !!openingBid;
 
     // Validate price or openingBid
     if (isAuction) {
@@ -73,7 +75,6 @@ exports.addArtwork = async (req, res) => {
 
     if (isAuction) {
       artworkData.auctionId = auctionId;
-      artworkData.auctionName = auctionName;
       artworkData.openingBid = openingBid;
     } else {
       artworkData.price = price;
@@ -88,18 +89,30 @@ exports.addArtwork = async (req, res) => {
   }
 };
 
+exports.getMyArtworks = async (req, res) => {
+  try {
+    const userId = req.user._id;
+
+    const artworks = await Artwork.find({ owner: userId });
+    if (!artworks) return res.status(404).json({ message: "No artworks found" });
+
+    res.status(200).json({ artworks });
+  } catch (error) {
+    res.status(500).json({ message: "server error", error: error.message });
+  }
+}
+
 exports.getArtworks = async (req, res) => {
   try {
-    const { owner, artist, q, category, medium, style, orientation, size, priceMin, priceMax, sort = 'createdAt', order = 'desc', page = 1, limit = 12 } = req.query;
+    const userId = req?.user?._id;
+    const { q, category, medium, style, orientation, size, priceMin, priceMax, sort = 'createdAt', order = 'desc', page = 1, limit = 12 } = req.query;
 
     const query = {};
 
     // If a search query is provided, use MongoDB text search
     if (q) query.$text = { $search: q };
-    if (owner) query.owner = owner; // Filter by owner if provided
 
     // Build filters
-    if (artist) query.artist = artist;
     if (category) query.category = category;
     if (medium) query.medium = medium;
     if (style) query.style = style;
@@ -119,11 +132,11 @@ exports.getArtworks = async (req, res) => {
 
     // Query and count
     const [artworks, total] = await Promise.all([
-      Artwork.find(query)
+      Artwork.find({ ...query, owner: { $ne: userId } })
         .sort(sortBy)
         .skip(skip)
         .limit(Number(limit)),
-      Artwork.countDocuments(query)
+      Artwork.countDocuments({ ...query, owner: { $ne: userId } })
     ]);
 
     res.status(200).json({
@@ -138,6 +151,22 @@ exports.getArtworks = async (req, res) => {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
+
+exports.getArtworkByAuction = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const auctionId = req.params.id;
+
+    const artworks = await Artwork.find({ auctionId, owner: { $ne: userId } });
+    if (!artworks) {
+      return res.status(404).json({ message: "No artworks found" });
+    }
+
+    res.status(200).json({ artworks });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+}
 
 exports.getArtworkById = async (req, res) => {
   try {
@@ -157,20 +186,31 @@ exports.getArtworkById = async (req, res) => {
 
 exports.updateArtwork = async (req, res) => {
   try {
+    const userId = req.user.id;
     const { id } = req.params;
+
+    const artwork = await Artwork.findById(id);
+    if (!artwork) {
+      return res.status(404).json({ message: "Artwork not found" });
+    }
+
+    if (artwork.owner.toString() !== userId) {
+      return res.status(403).json({ message: "Not authorized to update this artwork" });
+    }
+
     const updateFields = req.body;
 
-    // Uploaded files
-    const thumbnailFile = req.files?.thumbnail?.[0];
-    const imageFiles = req.files?.images;
+    // Block updates to price and openingBid
+    if ('price' in updateFields || 'openingBid' in updateFields) {
+      return res.status(400).json({ message: "Price and Opening Bid cannot be updated once artwork is created" });
+    }
 
-    // Allow only safe fields
     const allowedFields = [
-      "title", "price", "artist", "category", "size", "medium", "style",
-      "orientation", "description", "auctionName", "auctionStartDate",
-      "auctionEndDate", "openingBid", "inAuction", "auctionId"
+      "title", "price", "artist", "category", "size", "medium",
+      "style", "orientation", "description", "inAuction", "openingBid"
     ];
 
+    // Only allow updates to specific fields
     const sanitizedUpdate = {};
     for (const key of allowedFields) {
       if (updateFields[key] !== undefined) {
@@ -178,82 +218,67 @@ exports.updateArtwork = async (req, res) => {
       }
     }
 
-    const isAuction = sanitizedUpdate.inAuction === "true" || sanitizedUpdate.inAuction === true;
-
-    // Validate price/bid
-    if (isAuction) {
-      if (!sanitizedUpdate.openingBid || sanitizedUpdate.openingBid <= 0) {
-        return res.status(400).json({ message: "Opening bid must be greater than 0" });
-      }
-      sanitizedUpdate.price = undefined; // remove direct price if switching to auction
-    } else {
-      if (!sanitizedUpdate.price || sanitizedUpdate.price <= 0) {
-        return res.status(400).json({ message: "Price must be greater than 0" });
-      }
-      sanitizedUpdate.openingBid = undefined; // remove auction field if switching to direct
-    }
-
-    // Upload thumbnail if updated
+    // Upload thumbnail
+    const thumbnailFile = req.files?.thumbnail?.[0];
     if (thumbnailFile) {
-      const artworkThumbnailImage = await new Promise((resolve, reject) => {
+      const thumbnailUrl = await new Promise((resolve, reject) => {
         const stream = cloudinary.uploader.upload_stream(
           { folder: "artora-artwork-thumbnail" },
-          (error, result) => {
-            if (error) reject(new Error("Thumbnail upload failed"));
-            else resolve(result.secure_url);
-          }
+          (err, result) => err ? reject(err) : resolve(result.secure_url)
         );
         stream.end(thumbnailFile.buffer);
       });
-      sanitizedUpdate.thumbnail = artworkThumbnailImage;
+      sanitizedUpdate.thumbnail = thumbnailUrl;
     }
 
-    // Upload new images if provided
+    // Upload images
+    const imageFiles = req.files?.images;
     if (imageFiles && imageFiles.length > 0) {
-      const artworkImages = await Promise.all(
+      const imageUrls = await Promise.all(
         imageFiles.map(file =>
           new Promise((resolve, reject) => {
             const stream = cloudinary.uploader.upload_stream(
               { folder: "artora-artwork-images" },
-              (error, result) => {
-                if (error) reject(new Error("Image upload failed"));
-                else resolve(result.secure_url);
-              }
+              (err, result) => err ? reject(err) : resolve(result.secure_url)
             );
             stream.end(file.buffer);
           })
         )
       );
-      sanitizedUpdate.images = artworkImages;
+      sanitizedUpdate.images = imageUrls;
     }
 
-    // Update artwork
     const updatedArtwork = await Artwork.findByIdAndUpdate(id, sanitizedUpdate, {
       new: true,
-      runValidators: true,
+      runValidators: true
     });
 
-    if (!updatedArtwork) {
-      return res.status(404).json({ message: "Artwork not found" });
-    }
-
-    res.status(200).json({ message: "Artwork updated successfully", artwork: updatedArtwork });
+    res.status(200).json({
+      message: "Artwork updated successfully",
+      artwork: updatedArtwork
+    });
 
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 
-exports.deleteAuction = async (req, res) => {
+exports.deleteArtwork = async (req, res) => {
   try {
+    const userId = req.user.id;
     const { id } = req.params;
 
-    // Find artwork by id and delete
-    const deletedArtwork = await Artwork.findByIdAndDelete(id);
-
-    if (!deletedArtwork) {
-      res.status(404).json({ message: "Artwork not found" });
+    const artwork = await Artwork.findById(id);
+    if (!artwork) {
+      return res.status(404).json({ message: "Artwork not found" });
     }
+
+    if (artwork.owner.toString() !== userId) {
+      return res.status(403).json({ message: "Not authorized to delete this artwork" });
+    }
+
+    // Delete artwork by id
+    await Artwork.deleteOne({ _id: id });
 
     res.status(200).json({ message: "Artwork deleted successfully" });
   } catch (error) {
@@ -261,17 +286,61 @@ exports.deleteAuction = async (req, res) => {
   }
 }
 
-exports.getMyArtworks = async (req, res) => {
+exports.placeBid = async (req, res) => {
   try {
-    const myId = req.user._id;
+    const { amount } = req.body;
+    const artworkId = req.params.id;
+    const userId = req.user.id;
 
-    const artworks = await Artwork.find({ owner: myId }); // Find all the artworks for owner
-
-    if(!artworks){
-      return res.status(404).json({message: "No artworks found"});
+    if (!amount || amount <= 0) {
+      return res.status(400).json({ message: "Invalid bid amount" });
     }
 
-    res.status(200).json({artworks});
+    // Find the artwork
+    const artwork = await Artwork.findById(artworkId);
+    if (!artwork || !artwork.inAuction) {
+      return res.status(404).json({ message: "Artwork not found or not in auction" });
+    }
+
+    if (artwork.owner.toString() === userId) {
+      return res.status(404).json({ message: "Not authorized to bid this artwork" });
+    }
+
+    // Check if bid is higher than currnetBid or openingBid
+    const minBid = artwork.currnetBid || artwork.openingBid;
+    if (amount <= minBid) {
+      return res.status(400).json({ message: `Bid must be greater then ${minBid}` });
+    }
+
+    // Create a new bid
+    const bid = await Bid.create({
+      bidder: userId,
+      artwork: artworkId,
+      amount,
+    });
+
+    // Update artwork's current bid
+    artwork.currnetBid = amount;
+    await artwork.save();
+
+    res.status(201).json({
+      message: "Bid placed successfully",
+      bid,
+      currnetBid: artwork.currnetBid,
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+}
+
+exports.getBids = async (req, res) => {
+  try {
+    const artwork = req.params.id;
+
+    const bids = await Bid.find({artwork});
+    if (!bids) return res.status(404).json("Bids not found");
+
+    res.status(200).json({ bids });
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
   }

@@ -20,7 +20,8 @@ exports.createAuction = async (req, res) => {
 
 exports.getAuctions = async (req, res) => {
     try {
-        const auctions = await Auction.find(); // fetch all the auctions from database
+        // fetch all the auctions from database
+        const auctions = await Auction.find();
 
         res.status(200).json({ auctions });
     } catch (error) {

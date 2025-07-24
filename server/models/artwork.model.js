@@ -17,19 +17,16 @@ const artworkSchema = new mongoose.Schema({
             return this.inAuction;
         },
     },
-    auctionName: {
-        type: mongoose.Schema.Types.String,
-        ref:"Auction",
-        required: function () {
-            return this.inAuction;
-        },
-        trim: true,
-    },
     openingBid: {
         type: Number,
         required: function () {
             return this.inAuction;
         },
+        min: 1,
+    },
+    currnetBid: {
+        type: Number,
+        default: 0,
     },
     price: {
         type: Number,
@@ -86,6 +83,11 @@ const artworkSchema = new mongoose.Schema({
         type: [String],
         required: true,
     },
+    sold: {
+        type: Boolean,
+        required: true,
+        default: false,
+    }
 },
     {
         timestamps: true,

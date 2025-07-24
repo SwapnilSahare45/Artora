@@ -8,6 +8,8 @@ const cors = require("cors");
 const userRoutes = require("./routes/user.routes");
 const artworkRoutes = require("./routes/artwork.routes");
 const auctionRoutes = require("./routes/auction.routes");
+const orderRoutes = require("./routes/order.routes");
+const wishlistRoutes = require("./routes/wishlist.routes");
 
 // Connect to the database
 connectDB();
@@ -24,9 +26,12 @@ app.use(cors({
     credentials: true,
 }));
 
-app.use("/api/auth", userRoutes); // Routes for user authentication
-app.use("/api/artworks", artworkRoutes); // Routes for artwork management
-app.use("/api/auctions", auctionRoutes); // Routes for auction management
+// API route handlers
+app.use("/api/auth", userRoutes); // User authentication and management routes
+app.use("/api/artworks", artworkRoutes); // Artwork-related routes
+app.use("/api/auctions", auctionRoutes); // Auction-related routes
+app.use("/api/orders", orderRoutes); // Order-related routes
+app.use("/api/wishlists", wishlistRoutes); //Wishlist-related routes
 
 // Start the server and listen on the specified port
 app.listen(process.env.PORT || 5000, () => {
