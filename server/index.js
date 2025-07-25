@@ -18,14 +18,13 @@ connectDB();
 // Initialize Express app
 const app = express();
 
-app.use(express.json()); // Middleware to parse JSON bodies
-app.use(cookieParser()); // Middleware to parse cookies
-
 // Enable CORS for the client URL with credentials
 app.use(cors({
     origin: process.env.CLIENT_URL,
     credentials: true,
 }));
+app.use(express.json()); // Middleware to parse JSON bodies
+app.use(cookieParser()); // Middleware to parse cookies
 
 // API route handlers
 app.use("/api/auth", userRoutes); // User authentication and management routes

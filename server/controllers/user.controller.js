@@ -52,7 +52,7 @@ exports.register = async (req, res) => {
         // Send OTP to user's email
         await sendOTP(email, otpCode);
 
-        res.status(201).json({ message: "OTP sent to email. Please verify." });
+        res.status(201).json({ message: "OTP sent to email. Please verify.", email });
 
     } catch (error) {
         res.status(500).json({ message: 'Server error', error: error.message });
@@ -71,7 +71,6 @@ exports.verifyOtp = async (req, res) => {
 
     res.json({ message: "Email verified successfully" });
 };
-
 
 exports.login = async (req, res) => {
     try {
