@@ -19,30 +19,32 @@ import NotFound from './pages/NotFound';
 import AddArtworkDirectSell from './pages/AddArtworkDirectSell';
 import AddArtworkAuction from './pages/AddArtworkAuction';
 import Order from './pages/Order';
+import Otp from './pages/Otp';
 
 const AppRoutes = () => {
     return (
         <Routes>
-                <Route index element={<Home />} />
-                <Route path="login" element={<Login />} />
-                <Route path="register" element={<Register />} />
-                <Route path="profile" element={<Profile />} />
-                <Route path="connect" element={<Connect />} />
-                <Route path="auctions" element={<Auctions />} />
-                <Route path="auction/:id" element={<Auction />} />
-                <Route path="artworks" element={<Artworks />} />
-                <Route path="artwork/:id" element={<Artwork />} />
-                <Route path="messages" element={<Messages />} />
-                <Route path="payment" element={<Payment />} />
-                <Route path="orders" element={<Orders />} />
-                <Route path='order/:id' element={<Order/>}/>
-                <Route path="add-artwork-direct" element={<AddArtworkDirectSell/>} />
-                <Route path='add-artwork-auction/:id' element={<AddArtworkAuction/>}/>
-                <Route path="feedback" element={<FeedbackForm />} />
-                <Route path="wishlist" element={<Wishlist />} />
-                <Route path="notifications" element={<Notifications />} />
-                <Route path="settings" element={<Settings />} />
-                <Route path="*" element={<NotFound />} />
+            <Route index element={<Home />} />
+            <Route path="register" element={<Register />} />
+            <Route path='verify' element={<Otp />} />
+            <Route path="login" element={<Login />} />
+            <Route path="profile" element={<Profile />} />
+            <Route path="connect" element={<Connect />} />
+            <Route path="auctions" element={<Auctions />} />
+            <Route path="auction/:id" element={<Auction />} />
+            <Route path="artworks" element={<Artworks />} />
+            <Route path="artwork/:id" element={<Artwork />} />
+            <Route path="messages" element={<Messages />} />
+            <Route path="payment" element={<Payment />} />
+            <Route path="orders" element={<Orders />} />
+            <Route path='order/:id' element={<Order />} />
+            <Route path="add-artwork-direct" element={<AddArtworkDirectSell />} />
+            <Route path='add-artwork-auction/:id' element={<AddArtworkAuction />} />
+            <Route path="feedback" element={<FeedbackForm />} />
+            <Route path="wishlist" element={<Wishlist />} />
+            <Route path="notifications" element={<Notifications />} />
+            <Route path="settings" element={<Settings />} />
+            <Route path="*" element={<NotFound />} />
         </Routes>
     );
 };

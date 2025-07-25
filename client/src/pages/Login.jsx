@@ -1,8 +1,50 @@
 import logo from '../assets/logo.png';
 import googleIcon from '../assets/google-logo.svg';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { useAuthStore } from '../store/authStore';
+import validator from "validator";
+import { toast } from 'react-toastify';
 
 const Login = () => {
+  // State to hold user input
+  const [user, setUser] = useState({ email: '', password: '' });
+  // State to hold validation error
+  const [errors, setErrors] = useState({ email: '', password: '' });
+
+  // Get login fucntion, loadin state, and error from auth store
+  const { login, error, isLoading } = useAuthStore();
+
+  const navigate = useNavigate();
+
+  // Function to handle user login
+  const handleLogin = async () => {
+    const newErrors = { email: '', password: '' };
+
+    // Validation
+    if (!user.email.trim()) {
+      newErrors.email = "Email is required.";
+    } else if (!validator.isEmail(user.email)) {
+      newErrors.email = "Invalid email format.";
+    }
+    if (!user.password.trim()) newErrors.password = "Password is required.";
+    setErrors(newErrors);
+    // Check there is any error in validation error object, if yes then return
+    const hasErrors = Object.values(newErrors).some((e) => e);
+    if (hasErrors) return;
+
+    const { success } = await login(user);
+
+    // Check user login successful
+    // if yes navigate to artwork else show an error
+    if (success) {
+      toast.success("Login successful.");
+      navigate("/artworks")
+    } else {
+      toast.error(error || "Something went wrong!");
+    }
+  }
+
   return (
     <main className="grid grid-cols-1 md:grid-cols-2 h-auto bg-white md:h-screen">
       {/* Left Panel */}
@@ -26,17 +68,27 @@ const Login = () => {
             type="text"
             placeholder="Email"
             className="bg-gray-100 text-gray-900 py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-white"
+            value={user.email}
+            onChange={(e) => setUser({ ...user, email: e.target.value })}
           />
+          {errors.email && <p className='-mt-3 pl-1 text-sm text-red-600'>{errors.email}</p>}
+
           <input
             type="password"
             placeholder="Password"
             className="bg-gray-100 text-gray-900 py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-white"
+            value={user.password}
+            onChange={(e) => setUser({ ...user, password: e.target.value })}
           />
+          {errors.password && <p className='-mt-3 pl-1 text-sm text-red-600'>{errors.password}</p>}
+
           <button
             type="button"
             className="bg-white text-primary uppercase font-bold tracking-wide py-2 rounded hover:bg-gray-100 transition"
+            disabled={isLoading}
+            onClick={handleLogin}
           >
-            Login
+            {isLoading ? "Login..." : "Login"}
           </button>
         </div>
 
