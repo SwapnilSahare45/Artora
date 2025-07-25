@@ -104,7 +104,7 @@ exports.getMyArtworks = async (req, res) => {
 
 exports.getArtworks = async (req, res) => {
   try {
-    const userId = req?.user?._id;
+    const userId = req.user?._id;
     const { q, category, medium, style, orientation, size, priceMin, priceMax, sort = 'createdAt', order = 'desc', page = 1, limit = 12 } = req.query;
 
     const query = {};
@@ -133,6 +133,7 @@ exports.getArtworks = async (req, res) => {
     // Query and count
     const [artworks, total] = await Promise.all([
       Artwork.find({ ...query, owner: { $ne: userId } })
+        .populate("auctionId")
         .sort(sortBy)
         .skip(skip)
         .limit(Number(limit)),
@@ -172,7 +173,8 @@ exports.getArtworkById = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const artwork = await Artwork.findById(id); // Find the artwork by id
+    // Find the artwork by id
+    const artwork = await Artwork.findById(id).populate("auctionId");
 
     if (!artwork) {
       return res.status(400).json({ message: "Artwork not found" });
@@ -337,7 +339,7 @@ exports.getBids = async (req, res) => {
   try {
     const artwork = req.params.id;
 
-    const bids = await Bid.find({artwork});
+    const bids = await Bid.find({ artwork });
     if (!bids) return res.status(404).json("Bids not found");
 
     res.status(200).json({ bids });
