@@ -20,7 +20,6 @@ const Auction = () => {
             </p>
           </div>
 
-          {/* ➕ Add Auction Button */}
           <Link
             to={`/add-artwork-auction/${id}`}
             className="bg-primary text-white px-4 py-2 self-start rounded hover:bg-opacity-90 transition"

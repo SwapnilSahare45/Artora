@@ -1,7 +1,10 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useAuctionStore } from "../store/auctionStore";
+import AuctionCard from "../components/AuctionCard";
+import AuctionCardSkeleton from "../components/skeleton/AuctionCardSkeleton";
+
 
 const Auctions = () => {
   const [sortOption, setSortOption] = useState("start-desc");
@@ -9,6 +12,19 @@ const Auctions = () => {
   const handleSortChange = (e) => {
     setSortOption(e.target.value);
   };
+
+  const { getAuctions, auctions, isLoading, error } = useAuctionStore();
+
+  useEffect(() => {
+    const fetchAuctions = async () => {
+      await getAuctions();
+    };
+    fetchAuctions();
+  }, [getAuctions]);
+
+  if (error) {
+    return <p>{error}</p>
+  }
 
   return (
     <main className="bg-gray-50 text-black dark:bg-gray-900 dark:text-white min-h-screen">
@@ -19,7 +35,7 @@ const Auctions = () => {
           <h1 className="text-3xl font-semibold">Active Auctions</h1>
 
           <div className="flex items-center gap-4">
-            {/* 🔽 Date Sort Filter */}
+            {/* Date Sort Filter */}
             <select
               value={sortOption}
               onChange={handleSortChange}
@@ -33,26 +49,36 @@ const Auctions = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {[1, 2, 3].map((auction) => (
-            <div
-              key={auction}
-              className="bg-white dark:bg-gray-800 shadow-md rounded-lg p-6"
-            >
-              <h2 className="text-xl font-semibold mb-2">Auction #{auction}</h2>
-              <p className="text-gray-600 dark:text-gray-300 mb-4">
-                Starts: July 20, 2025<br />
-                Ends: July 25, 2025
-              </p>
-              <Link
-                to={`/auction/${auction}`}
-                className="inline-block bg-primary text-white px-4 py-2 rounded hover:bg-opacity-90 transition"
-              >
-                View Auction
-              </Link>
+        {
+          auctions ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {
+                !isLoading ? (
+                  auctions.map((auction) => (
+                    <AuctionCard
+                      key={auction._id}
+                      id={auction._id}
+                      title={auction.title}
+                      startDate={auction.startDate}
+                      endDate={auction.endDate}
+                    />
+                  ))
+                ) : (
+                  <>
+                    <AuctionCardSkeleton />
+                    <AuctionCardSkeleton />
+                    <AuctionCardSkeleton />
+                    <AuctionCardSkeleton />
+                    <AuctionCardSkeleton />
+                    <AuctionCardSkeleton />
+                  </>
+                )
+              }
             </div>
-          ))}
-        </div>
+          ) : (
+            <p className="text-center">No auction found.</p>
+          )
+        }
       </section>
 
       <Footer />

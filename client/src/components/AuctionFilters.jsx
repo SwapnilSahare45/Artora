@@ -22,7 +22,7 @@ const FilterSection = ({ title, options }) => (
 const AuctionFilters = () => {
   return (
     <div className="h-full overflow-y-scroll bg-white shadow dark:bg-gray-800 dark:text-white w-full rounded">
-      <h2 className="text-lg font-semibold mb-4 sticky top-0 bg-white dark:bg-gray-900 py-4 text-center shadow">
+      <h2 className="text-lg font-semibold mb-4 sticky top-0 bg-white dark:bg-gray-800 py-4 text-center shadow">
         Auction Filters
       </h2>
 

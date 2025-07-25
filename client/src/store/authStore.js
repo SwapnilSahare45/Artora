@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { loginUser, registerUser, verifyOTP } from "../services/authService";
+import { loginUserService, registerUserService, verifyOTPService } from "../services/authService";
 
 // Create a Zustand store for authentication
 export const useAuthStore = create((set) => ({
@@ -11,11 +11,11 @@ export const useAuthStore = create((set) => ({
     register: async (data) => {
         set({ isLoading: true });
         try {
-            const response = await registerUser(data);
+            const response = await registerUserService(data);
             set({ user: response.data, isLoading: false });
             return { success: true };
         } catch (error) {
-            set({ error: error?.response?.data?.message, isLoading: false });
+            set({ error: error.response?.data?.message, isLoading: false });
         }
     },
 
@@ -23,7 +23,7 @@ export const useAuthStore = create((set) => ({
     verifyUser: async (code) => {
         set({ isLoading: true });
         try {
-            await verifyOTP(code);
+            await verifyOTPService(code);
             set({ isLoading: false });
             return { success: true };
         } catch (error) {
@@ -35,7 +35,7 @@ export const useAuthStore = create((set) => ({
     login: async (data) => {
         set({ isLoading: true });
         try {
-            const response = await loginUser(data);
+            const response = await loginUserService(data);
             set({ user: response.data?.user, isLoading: false });
             return { success: true };
         } catch (error) {

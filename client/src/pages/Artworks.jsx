@@ -2,74 +2,24 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ArtworkCard from "@/components/ArtworkCard";
 import Filter from "@/components/ArtFilters"; // Make sure this path is correct
+import { useArtworkStore } from "../store/artworkStore";
+import { useEffect } from "react";
+import ArtworkCardSkeleton from "../components/skeleton/ArtworkCardSkeleton";
 
 const Artworks = () => {
-  // Dummy data — will be replaced by real data later
-  const artworks = [
-    {
-      id: 1,
-      image: "https://source.unsplash.com/random/400x400?art1",
-      title: "Mystic Forest",
-      artist: "Ava Green",
-      price: "$1,000",
-      timeLeft: null,
-      type: "direct",
-    },
-    {
-      id: 2,
-      image: "https://source.unsplash.com/random/400x400?art2",
-      title: "Silent Horizon",
-      artist: "Leo Waters",
-      price: "$900",
-      timeLeft: "3d 4h",
-      type: "auction",
-    },
-    {
-      id: 3,
-      image: "https://source.unsplash.com/random/400x400?art3",
-      title: "Urban Chaos",
-      artist: "Mira Blue",
-      price: "$650",
-      timeLeft: null,
-      type: "direct",
-    },
-    {
-      id: 4,
-      image: "https://source.unsplash.com/random/400x400?art4",
-      title: "Twilight Vibes",
-      artist: "Jonas Hart",
-      price: "$1,400",
-      timeLeft: "5d 1h",
-      type: "auction",
-    },
-    {
-      id: 5,
-      image: "https://source.unsplash.com/random/400x400?art2",
-      title: "Silent Horizon",
-      artist: "Leo Waters",
-      price: "$900",
-      timeLeft: "3d 4h",
-      type: "auction",
-    },
-    {
-      id: 6,
-      image: "https://source.unsplash.com/random/400x400?art3",
-      title: "Urban Chaos",
-      artist: "Mira Blue",
-      price: "$650",
-      timeLeft: null,
-      type: "direct",
-    },
-    {
-      id: 7,
-      image: "https://source.unsplash.com/random/400x400?art4",
-      title: "Twilight Vibes",
-      artist: "Jonas Hart",
-      price: "$1,400",
-      timeLeft: "5d 1h",
-      type: "auction",
-    },
-  ];
+
+  const { getArtworks, artworks, isLoading, error } = useArtworkStore();
+
+  useEffect(() => {
+    const fetchArtworks = async () => {
+      await getArtworks();
+    };
+    fetchArtworks();
+  }, [getArtworks]);
+
+  if (error) {
+    return <p>{error}</p>
+  }
 
   return (
     <main className="bg-gray-50 text-black dark:bg-gray-900 dark:text-white min-h-screen">
@@ -89,20 +39,39 @@ const Artworks = () => {
             <Filter />
           </aside>
 
-          {/* Artwork Grid */}
-          <div className="sticky top-24 self-start lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 xl:grid-cols-3 gap-6">
-            {artworks.map((art) => (
-              <ArtworkCard
-                key={art.id}
-                image={art.image}
-                title={art.title}
-                artist={art.artist}
-                price={art.price}
-                timeLeft={art.type === "auction" ? art.timeLeft : null}
-                to={`/artwork/${art.id}`}
-              />
-            ))}
-          </div>
+          {
+            artworks ? (
+              <div className="sticky top-24 self-start lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                {
+                  !isLoading ? (
+                    artworks.map((art) => (
+                      <ArtworkCard
+                        key={art._id}
+                        image={art.thumbnail}
+                        title={art.title}
+                        artist={art.artist}
+                        amount={art.price || art.openingBid}
+                        timeLeft={art.inAuction ? art.auctionId.endDate : null}
+                        to={`/artwork/${art._id}`}
+                      />
+                    ))
+                  ) : (
+                    <>
+                      <ArtworkCardSkeleton />
+                      <ArtworkCardSkeleton />
+                      <ArtworkCardSkeleton />
+                      <ArtworkCardSkeleton />
+                      <ArtworkCardSkeleton />
+                      <ArtworkCardSkeleton />
+                    </>
+                  )
+                }
+              </div>
+            ) : (
+              <p>No artworks found.</p>
+            )
+          }
+
         </div>
       </section>
 
