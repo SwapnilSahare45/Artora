@@ -126,9 +126,7 @@ exports.login = async (req, res) => {
 
 exports.getMe = async (req, res) => {
     try {
-        const userId = req.user; // Already populated by middleware
-
-        res.status(200).json({ userId });
+        res.status(200).json(req.user);
     } catch (error) {
         res.status(500).json({ message: "Server error", error: error.message });
     }
@@ -141,8 +139,8 @@ exports.updateMe = async (req, res) => {
         let avatarUrl = req.user.avatar;
 
         // Check if there is anything to update
-        if(!name && !bio && !req.file){
-            return res.status(400).json({message:'No update fields provided'});
+        if (!name && !bio && !req.file) {
+            return res.status(400).json({ message: 'No update fields provided' });
         }
 
         // If new avatar is upload
@@ -175,6 +173,19 @@ exports.updateMe = async (req, res) => {
             updatedMe,
         })
 
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+}
+
+exports.getUsers = async (req, res) => {
+    try {
+        const myId = req.user._id;
+
+        const users = await User.find({ _id: { $ne: myId } });
+        if (!users) return res.status(404).json({ message: "No users found." });
+        
+        res.status(200).json({ users })
     } catch (error) {
         res.status(500).json({ message: "Server error", error: error.message });
     }
