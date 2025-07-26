@@ -1,11 +1,12 @@
 import { create } from "zustand";
-import { loginUserService, registerUserService, verifyOTPService } from "../services/authService";
+import { getUsersService, loginUserService, profileService, registerUserService, updateProfileService, verifyOTPService } from "../services/authService";
 
 // Create a Zustand store for authentication
 export const useAuthStore = create((set) => ({
-    user: null,         // Stores the authenticated user object
-    isLoading: false,   // Indicates if an auth request is in progress
-    error: null,        // Stores error messages from auth requests
+    users: [], // Store users array from auth request
+    user: null, // Stores the authenticated user object
+    isLoading: false, // Indicates if an auth request is in progress
+    error: null, // Stores error messages from auth requests
 
     // Register a new user
     register: async (data) => {
@@ -40,7 +41,41 @@ export const useAuthStore = create((set) => ({
             return { success: true };
         } catch (error) {
             console.log(error)
-            set({ error: error.response?.data?.message, isLoading: false })
+            set({ error: error.response?.data?.message, isLoading: false });
         }
-    }
+    },
+
+    // Get profile
+    profile: async () => {
+        set({ isLoading: true });
+        try {
+            const response = await profileService();
+            set({ user: response.data, isLoading: false });
+        } catch (error) {
+            set({ error: error.response?.data?.message, isLoading: false });
+        }
+    },
+
+    // Update profile
+    updateProfile: async (data) => {
+        set({ isLoading: true });
+        try {
+            const response = await updateProfileService(data);
+            set({ user: response.data?.updatedMe, isLoading: false });
+            return { success: true };
+        } catch (error) {
+            set({ error: error.response?.data?.message, isLoading: false });
+        }
+    },
+
+    // Get users
+    getUsers: async () => {
+        set({ isLoading: true });
+        try {
+            const response = await getUsersService();
+            set({ users: response.data?.users, isLoading: false });
+        } catch (error) {
+            set({ error: error.response?.data?.message, isLoading: false });
+        }
+    },
 }));

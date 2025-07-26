@@ -13,4 +13,19 @@ export const verifyOTPService = async (code) => {
 // Login user with provided data
 export const loginUserService = async (data) => {
     return await api.post("auth/login", data);
+};
+
+// Get logged-in user profile
+export const profileService = async () => {
+    return await api.get("/auth/me");
+};
+
+// Update logged-in user profile
+export const updateProfileService = async (data) => {
+    return await api.put("/auth/me", data);
+};
+
+// Get all users except logged-in user
+export const getUsersService = async () => {
+    return await api.get("/auth/users");
 }

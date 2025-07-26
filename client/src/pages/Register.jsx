@@ -54,24 +54,50 @@ const Register = () => {
   };
 
   return (
-    <main className="grid grid-cols-1 md:grid-cols-2 h-auto bg-white md:h-screen">
+    <main
+      className="grid grid-cols-1 md:grid-cols-2 h-auto bg-white md:h-screen"
+    >
 
       {/* Left Panel */}
-      <div className="flex flex-col justify-center items-center gap-4 py-8 px-2 md:p-8">
-        <div className="flex flex-col items-center gap-1">
-          <img src={logo} alt="ARTORA" className="w-28" />
-          <h1 className="text-4xl tracking-widest text-primary">ARTORA</h1>
+      <div
+        className="flex flex-col justify-center items-center gap-4 py-8 px-2 md:p-8"
+      >
+        <div
+          className="flex flex-col items-center gap-1"
+        >
+          {/* Logo */}
+          <img
+            src={logo}
+            alt="ARTORA"
+            className="w-28"
+          />
+          <h1
+            className="text-4xl tracking-widest text-primary"
+          >
+            ARTORA
+          </h1>
         </div>
-        <p className="text-center text-gray-800 max-w-md">
+        <p
+          className="text-center text-gray-800 max-w-md"
+        >
           Sign up to join the Art Auction community and start bidding on your favorite pieces!
         </p>
       </div>
 
       {/* Right Panel */}
-      <div className="bg-primary/90 flex flex-col justify-center items-center py-8 px-6">
-        <h3 className="text-white text-3xl tracking-wider uppercase mb-8">Sign Up</h3>
+      <div
+        className="bg-primary/90 flex flex-col justify-center items-center py-8 px-6"
+      >
+        <h3
+          className="text-white text-3xl tracking-wider uppercase mb-8"
+        >
+          Sign Up
+        </h3>
 
-        <div className="w-full max-w-md flex flex-col gap-4">
+        <div
+          className="w-full max-w-md flex flex-col gap-4"
+        >
+          {/* Name input */}
           <input
             type="text"
             placeholder="Name"
@@ -81,6 +107,7 @@ const Register = () => {
           />
           {errors.name && <p className='-mt-3 pl-1 text-sm text-red-600'>{errors.name}</p>}
 
+          {/* Email input */}
           <input
             type="email"
             placeholder="Email"
@@ -90,6 +117,7 @@ const Register = () => {
           />
           {errors.email && <p className='-mt-3 pl-1 text-sm text-red-600'>{errors.email}</p>}
 
+          {/* Password input */}
           <input
             type="password"
             placeholder="Password"
@@ -99,6 +127,7 @@ const Register = () => {
           />
           {errors.password && <p className='-mt-3 pl-1 text-sm text-red-600'>{errors.password}</p>}
 
+          {/* Register button */}
           <button
             type="button"
             className="bg-white text-primary uppercase font-bold tracking-wide py-2 rounded hover:bg-gray-100 transition"
@@ -110,14 +139,30 @@ const Register = () => {
         </div>
 
         {/* Sign up with Google */}
-        <div className="mt-6 flex items-center gap-3 bg-white text-black px-4 py-2 rounded shadow cursor-pointer hover:bg-gray-100 transition">
-          <img src={googleIcon} alt="Google" className="w-5 h-5" />
-          <span className="text-sm font-medium">Sign up with Google</span>
+        <div
+          className="mt-6 flex items-center gap-3 bg-white text-black px-4 py-2 rounded shadow cursor-pointer hover:bg-gray-100 transition"
+        >
+          <img
+            src={googleIcon}
+            alt="Google"
+            className="w-5 h-5"
+          />
+          <span
+            className="text-sm font-medium"
+          >
+            Sign up with Google
+          </span>
         </div>
 
-        <p className="mt-6 text-white text-sm">
+        {/* Login link */}
+        <p
+          className="mt-6 text-white text-sm"
+        >
           Already have an account?{' '}
-          <Link to="/login" className="underline hover:text-gray-200">
+          <Link
+            to="/login"
+            className="underline hover:text-gray-200"
+          >
             Login here
           </Link>
         </p>

@@ -43,20 +43,45 @@ const Otp = () => {
     }
 
     return (
-        <main className="grid grid-cols-1 md:grid-cols-2 h-auto bg-white md:h-screen">
+        <main
+            className="grid grid-cols-1 md:grid-cols-2 h-auto bg-white md:h-screen"
+        >
             {/* Left Panel */}
-            <div className="flex flex-col justify-center items-center gap-4 py-8 px-2 md:p-8">
-                <div className="flex flex-col items-center gap-1">
-                    <img src={logo} alt="ARTORA" className="w-28" />
-                    <h1 className="text-4xl tracking-widest text-primary">ARTORA</h1>
+            <div
+                className="flex flex-col justify-center items-center gap-4 py-8 px-2 md:p-8"
+            >
+                <div
+                    className="flex flex-col items-center gap-1"
+                >
+                    {/* Logo */}
+                    <img
+                        src={logo}
+                        alt="ARTORA"
+                        className="w-28"
+                    />
+                    <h1
+                        className="text-4xl tracking-widest text-primary"
+                    >
+                        ARTORA
+                    </h1>
                 </div>
             </div>
 
             {/* Right Panel */}
-            <div className="bg-primary/90 flex flex-col justify-center items-center py-8 px-6">
-                <h1 className='text-3xl text-white'>Verify OTP</h1>
+            <div
+                className="bg-primary/90 flex flex-col justify-center items-center py-8 px-6"
+            >
+                <h1
+                    className='text-3xl text-white'
+                >
+                    Verify OTP
+                </h1>
 
-                <div className="w-full max-w-md flex flex-col gap-4 mt-6">
+                {/* Input fields */}
+                <div
+                    className="w-full max-w-md flex flex-col gap-4 mt-6"
+                >
+                    {/* OTP input */}
                     <input
                         type="Number"
                         placeholder="Enter OTP"
@@ -65,6 +90,7 @@ const Otp = () => {
                         onChange={(e) => setData({ ...data, code: e.target.value.slice(0, 6) })}
                     />
 
+                    {/* Verify button */}
                     <button
                         className='bg-white text-primary text-lg rounded py-1 tracking-wider cursor-pointer'
                         disabled={isLoading}
@@ -73,9 +99,7 @@ const Otp = () => {
                         {isLoading ? "Verifying..." : "Verify OTP"}
                     </button>
                 </div>
-
             </div>
-
         </main>
     )
 }

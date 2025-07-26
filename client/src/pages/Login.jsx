@@ -46,24 +46,52 @@ const Login = () => {
   }
 
   return (
-    <main className="grid grid-cols-1 md:grid-cols-2 h-auto bg-white md:h-screen">
+    <main
+      className="grid grid-cols-1 md:grid-cols-2 h-auto bg-white md:h-screen"
+    >
       {/* Left Panel */}
-      <div className="flex flex-col justify-center items-center gap-4 py-8 px-2 md:p-8">
-        <div className="flex flex-col items-center gap-1">
-          <img src={logo} alt="ARTORA" className="w-28" />
-          <h1 className="text-4xl tracking-widest text-primary">ARTORA</h1>
+      <div
+        className="flex flex-col justify-center items-center gap-4 py-8 px-2 md:p-8"
+      >
+        <div
+          className="flex flex-col items-center gap-1"
+        >
+          {/* Logo */}
+          <img
+            src={logo}
+            alt="ARTORA"
+            className="w-28"
+          />
+          <h1
+            className="text-4xl tracking-widest text-primary"
+          >
+            ARTORA
+          </h1>
         </div>
-        <p className="text-center text-gray-700 max-w-md">
+
+        <p
+          className="text-center text-gray-700 max-w-md"
+        >
           Sign in to access your account and start bidding on exclusive art pieces!
           Discover, connect, participate, enjoy, and win!
         </p>
       </div>
 
       {/* Right Panel */}
-      <div className="bg-primary/90 flex flex-col justify-center items-center py-8 px-6">
-        <h3 className="text-white text-3xl tracking-wider uppercase mb-8">Sign In</h3>
+      <div
+        className="bg-primary/90 flex flex-col justify-center items-center py-8 px-6"
+      >
+        <h3
+          className="text-white text-3xl tracking-wider uppercase mb-8"
+        >
+          Sign In
+        </h3>
 
-        <div className="w-full max-w-md flex flex-col gap-4">
+        {/* Input fields */}
+        <div
+          className="w-full max-w-md flex flex-col gap-4"
+        >
+          {/* Email input */}
           <input
             type="text"
             placeholder="Email"
@@ -73,6 +101,7 @@ const Login = () => {
           />
           {errors.email && <p className='-mt-3 pl-1 text-sm text-red-600'>{errors.email}</p>}
 
+          {/* Password input */}
           <input
             type="password"
             placeholder="Password"
@@ -82,6 +111,7 @@ const Login = () => {
           />
           {errors.password && <p className='-mt-3 pl-1 text-sm text-red-600'>{errors.password}</p>}
 
+          {/* Login button */}
           <button
             type="button"
             className="bg-white text-primary uppercase font-bold tracking-wide py-2 rounded hover:bg-gray-100 transition"
@@ -93,14 +123,29 @@ const Login = () => {
         </div>
 
         {/* Sign in with Google */}
-        <div className="mt-6 flex items-center gap-3 bg-white text-black px-4 py-2 rounded shadow cursor-pointer hover:bg-gray-100 transition">
-          <img src={googleIcon} alt="Google" className="w-5 h-5" />
-          <span className="text-sm font-medium">Sign in with Google</span>
+        <div
+          className="mt-6 flex items-center gap-3 bg-white text-black px-4 py-2 rounded shadow cursor-pointer hover:bg-gray-100 transition"
+        >
+          <img
+            src={googleIcon}
+            alt="Google" className="w-5 h-5"
+          />
+          <span
+            className="text-sm font-medium"
+          >
+            Sign in with Google
+          </span>
         </div>
 
-        <p className="mt-6 text-white text-sm">
+        {/* Register link */}
+        <p
+          className="mt-6 text-white text-sm"
+        >
           Don't have an account?{' '}
-          <Link to="/register" className="underline hover:text-gray-200">
+          <Link
+            to="/register"
+            className="underline hover:text-gray-200"
+          >
             Register here
           </Link>
         </p>

@@ -1,17 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
-import {
-  Menu,
-  X,
-  Bell,
-  Heart,
-  MessageCircle,
-  User,
-  LogOut,
-  ShoppingBag,
-  Settings,
-} from "lucide-react";
-import logo from "../assets/logo.png"; // Adjust the path as necessary
+import { Menu, X, Bell, Heart, MessageCircle, User, LogOut, ShoppingBag, Settings, } from "lucide-react";
+import logo from "../assets/logo.png";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -26,36 +16,36 @@ const Navbar = () => {
   }, [location]);
 
   useEffect(() => {
- let root = window.document.documentElement;
-  if (theme === "dark") {
-   root.classList.add("dark");
- } else if (theme === "light") {
-    root.classList.remove("dark");
- } else {
-    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-   prefersDark ? root.classList.add("dark") : root.classList.remove("dark");
-  }
+    let root = window.document.documentElement;
+    if (theme === "dark") {
+      root.classList.add("dark");
+    } else if (theme === "light") {
+      root.classList.remove("dark");
+    } else {
+      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      prefersDark ? root.classList.add("dark") : root.classList.remove("dark");
+    }
 
-  localStorage.setItem("theme", theme);
-   root = document.documentElement;
+    localStorage.setItem("theme", theme);
+    root = document.documentElement;
 
-  if (theme === "system") {
-   // reflect the system preference each time the media query fires
-    const apply = () =>
-   (root.dataset.theme =
+    if (theme === "system") {
+      // reflect the system preference each time the media query fires
+      const apply = () =>
+      (root.dataset.theme =
         window.matchMedia("(prefers-color-scheme: dark)").matches
           ? "dark"
           : "light");
 
-    apply();                           // initial run
-    const mq = window.matchMedia("(prefers-color-scheme: dark)");
-   mq.addEventListener("change", apply);
-    return () => mq.removeEventListener("change", apply); // cleanup
-  }
+      apply();                           // initial run
+      const mq = window.matchMedia("(prefers-color-scheme: dark)");
+      mq.addEventListener("change", apply);
+      return () => mq.removeEventListener("change", apply); // cleanup
+    }
 
-  root.dataset.theme = theme;          // "light" or "dark"
-  localStorage.setItem("theme", theme);
- }, [theme]);
+    root.dataset.theme = theme;          // "light" or "dark"
+    localStorage.setItem("theme", theme);
+  }, [theme]);
 
 
   /* ─── Auth placeholder ──────────────────────── */
@@ -67,7 +57,7 @@ const Navbar = () => {
     { name: "Artworks", path: "/artworks" },
     { name: "Auctions", path: "/auctions" },
     { name: "Connect", path: "/connect" },
-    {name:"Sell Artwork", path:"/add-artwork-direct"},
+    { name: "Sell Artwork", path: "/add-artwork-direct" },
   ];
   const guestLinks = [
     { name: "Login", path: "/login" },
@@ -76,17 +66,32 @@ const Navbar = () => {
 
   /* ─── JSX ───────────────────────────────────── */
   return (
-    <header className="fixed inset-x-0 top-0 z-50 bg-white dark:bg-gray-900 border-b dark:border-gray-700 border-gray-200">
-      <div className="max-w-7xl mx-auto flex items-center justify-between px-4 py-3 md:py-4">
-        <div className="flex items-center">
-          <img src={logo} alt="ARTORA" className="w-8"/>
-          <Link to="/" className="text-primary">
-          ARTORA
-        </Link>
+    <header
+      className="fixed inset-x-0 top-0 z-50 bg-white dark:bg-gray-900 border-b dark:border-gray-700 border-gray-200"
+    >
+      <div
+        className="max-w-7xl mx-auto flex items-center justify-between px-4 py-3 md:py-4"
+      >
+        <div
+          className="flex items-center"
+        >
+          <img
+            src={logo}
+            alt="ARTORA"
+            className="w-8"
+          />
+          <Link
+            to="/"
+            className="text-primary"
+          >
+            ARTORA
+          </Link>
         </div>
 
         {/* Desktop nav */}
-        <nav className="hidden md:flex items-center gap-6">
+        <nav
+          className="hidden md:flex items-center gap-6"
+        >
           {baseLinks.map((l) => (
             <NavLink
               key={l.name}
@@ -155,13 +160,17 @@ const Navbar = () => {
               </NavLink>
 
               {/* Profile dropdown */}
-              <div className="group relative bg-gray-50 text-black dark:bg-gray-900 dark:text-white">
+              <div
+                className="group relative bg-gray-50 text-black dark:bg-gray-900 dark:text-white"
+              >
                 <img
                   src={userAvatar}
                   alt="profile"
                   className="w-8 h-8 rounded-full cursor-pointer"
                 />
-                <div className="absolute -right-10 w-40 bg-white dark:bg-gray-800 rounded shadow-lg hidden group-hover:block">
+                <div
+                  className="absolute -right-10 w-40 bg-white dark:bg-gray-800 rounded shadow-lg hidden group-hover:block"
+                >
                   <Link
                     to="/profile"
                     className="flex items-center gap-2 px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700"
@@ -200,7 +209,9 @@ const Navbar = () => {
               Theme: {theme.charAt(0).toUpperCase() + theme.slice(1)}
             </button>
             {dropdownOpen && (
-              <ul className="absolute right-0 mt-2 w-32 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 dark:text-white rounded shadow text-sm z-50">
+              <ul
+                className="absolute right-0 mt-2 w-32 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 dark:text-white rounded shadow text-sm z-50"
+              >
                 {["light", "dark", "system"].map((option) => (
                   <li
                     key={option}
@@ -230,7 +241,9 @@ const Navbar = () => {
 
       {/* Mobile menu */}
       {open && (
-        <nav className="md:hidden bg-white dark:bg-gray-900 px-4 pb-4">
+        <nav
+          className="md:hidden bg-white dark:bg-gray-900 px-4 pb-4"
+        >
           {[...baseLinks, ...(isAuth ? [] : guestLinks)].map((l) => (
             <NavLink
               key={l.name}
@@ -274,7 +287,9 @@ const Navbar = () => {
           )}
 
           {/* mobile theme selector */}
-          <div className="relative mt-2">
+          <div
+            className="relative mt-2"
+          >
             <button
               onClick={() => setDropdownOpen(!dropdownOpen)}
               className="bg-gray-100 dark:bg-gray-800 px-3 py-2 rounded text-sm text-gray-700 dark:text-gray-200 w-full text-left"
@@ -282,13 +297,14 @@ const Navbar = () => {
               Theme: {theme.charAt(0).toUpperCase() + theme.slice(1)}
             </button>
             {dropdownOpen && (
-              <ul className="absolute right-0 mt-2 w-32 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded shadow text-sm z-50">
+              <ul
+                className="absolute right-0 mt-2 w-32 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded shadow text-sm z-50"
+              >
                 {["light", "dark", "system"].map((option) => (
                   <li
                     key={option}
-                    className={`cursor-pointer px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 ${
-                      theme === option ? "font-semibold text-primary" : ""
-                    }`}
+                    className={`cursor-pointer px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 ${theme === option ? "font-semibold text-primary" : ""
+                      }`}
                     onClick={() => {
                       setTheme(option);
                       setDropdownOpen(false);
