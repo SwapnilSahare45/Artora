@@ -73,7 +73,7 @@ const Connect = () => {
           >
             {/* Conditional redering for loading state */}
             {
-              isLoading ? (
+              !isLoading ? (
                 filteredPeople.map((person) => (
                   <UserCard
                     key={person.id}

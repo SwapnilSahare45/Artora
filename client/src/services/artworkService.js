@@ -1,5 +1,10 @@
 import { api } from "./api";
 
+// Add artwork
+export const addArtworkService = async (data) => {
+    return await api.post("artworks", data);
+};
+
 // Get logged-in user artworks
 export const getMyArtworksService = async () => {
     return await api.get("artworks/my");

@@ -28,4 +28,9 @@ export const updateProfileService = async (data) => {
 // Get all users except logged-in user
 export const getUsersService = async () => {
     return await api.get("/auth/users");
-}
+};
+
+// Get user profile
+export const getUserProfileService = async (id) => {
+    return await api.get(`/auth/profile/${id}`);
+};

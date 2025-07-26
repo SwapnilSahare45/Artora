@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { getUsersService, loginUserService, profileService, registerUserService, updateProfileService, verifyOTPService } from "../services/authService";
+import { getUserProfileService, getUsersService, loginUserService, profileService, registerUserService, updateProfileService, verifyOTPService } from "../services/authService";
 
 // Create a Zustand store for authentication
 export const useAuthStore = create((set) => ({
@@ -74,6 +74,16 @@ export const useAuthStore = create((set) => ({
         try {
             const response = await getUsersService();
             set({ users: response.data?.users, isLoading: false });
+        } catch (error) {
+            set({ error: error.response?.data?.message, isLoading: false });
+        }
+    },
+
+    getUserProfile: async (id) => {
+        set({ isLoading: true });
+        try {
+            const response = await getUserProfileService(id);
+            set({ user: response.data?.user, isLoading: false });
         } catch (error) {
             set({ error: error.response?.data?.message, isLoading: false });
         }

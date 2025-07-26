@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { getArtworkService, getArtworksService, getMyArtworksService } from "../services/artworkService";
+import { addArtworkService, getArtworkService, getArtworksService, getMyArtworksService } from "../services/artworkService";
 
 // Create a zustand store for artwork
 export const useArtworkStore = create((set) => ({
@@ -7,6 +7,17 @@ export const useArtworkStore = create((set) => ({
     artwork: null, // Store the artwork object
     isLoading: false, // Indicates if an artwork request in process
     error: null, // Store error messages from artwork request
+
+    // Add artwork
+    addArtwork: async (data) => {
+        set({ isLoading: true });
+        try {
+            await addArtworkService(data);
+            set({ isLoading: false });
+        } catch (error) {
+            set({ error: error.response?.data?.message, isLoading: false });
+        }
+    },
 
     // Get logged-in user artworks 
     getMyArtworks: async () => {
