@@ -22,8 +22,26 @@ exports.getAuctions = async (req, res) => {
     try {
         // fetch all the auctions from database
         const auctions = await Auction.find();
+        if (!auctions) {
+            return res.status(404).json({ message: "No auction found." });
+        }
 
         res.status(200).json({ auctions });
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+}
+
+exports.getAuction = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const auction = await Auction.find(id);
+        if (!auction) {
+            return res.status(404).json({ message: "Auction not found." });
+        }
+
+        res.status(200).json({ auction });
     } catch (error) {
         res.status(500).json({ message: "Server error", error: error.message });
     }
