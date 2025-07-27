@@ -2,6 +2,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useRef, useState } from "react";
 import { useArtworkStore } from "../store/artworkStore";
+import { toast } from "react-toastify";
 
 const AddArtworkDirect = () => {
 
@@ -77,18 +78,23 @@ const AddArtworkDirect = () => {
       data.append("images", img);
     });
 
-    await addArtwork(data);
+    const { success } = await addArtwork(data);
 
-    // Clear artwork data state
-    setArtworkData({ title: '', artist: '', price: '', category: '', size: '', medium: '', style: '', orientation: '', description: '' });
+    if (success) {
 
-    // Clear file inputs using ref
-    if (thumbnailRef.current) thumbnailRef.current.value = '';
-    if (imagesRef.current) thumbnailRef.current.value = '';
+      toast.success("Artwork added successfully.");
 
-    // Clear state of thumbnail and images
-    setSelectedThumbnail(null);
-    setSelectedImages(null);
+      // Clear artwork data state
+      setArtworkData({ title: '', artist: '', price: '', category: '', size: '', medium: '', style: '', orientation: '', description: '' });
+
+      // Clear file inputs using ref
+      if (thumbnailRef.current) thumbnailRef.current.value = '';
+      if (imagesRef.current) thumbnailRef.current.value = '';
+
+      // Clear state of thumbnail and images
+      setSelectedThumbnail(null);
+      setSelectedImages(null);
+    }
   }
 
   // Show error

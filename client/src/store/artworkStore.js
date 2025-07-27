@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { addArtworkService, getArtworkService, getArtworksService, getMyArtworksService } from "../services/artworkService";
+import { addArtworkService, getArtworkService, getArtworksService, getAuctionArtworksService, getMyArtworksService } from "../services/artworkService";
 
 // Create a zustand store for artwork
 export const useArtworkStore = create((set) => ({
@@ -14,6 +14,7 @@ export const useArtworkStore = create((set) => ({
         try {
             await addArtworkService(data);
             set({ isLoading: false });
+            return { success: true };
         } catch (error) {
             set({ error: error.response?.data?.message, isLoading: false });
         }
@@ -36,6 +37,17 @@ export const useArtworkStore = create((set) => ({
         try {
             const response = await getArtworksService();
             set({ artworks: response.data.artworks, isLoading: false });
+        } catch (error) {
+            set({ error: error.response?.data?.message, isLoading: false });
+        }
+    },
+
+    // Get auction artworks
+    getAuctionArtworks: async (id) => {
+        set({ isLoading: true });
+        try {
+            const response = await getAuctionArtworksService(id);
+            set({ artworks: response.data?.artworks, isLoading: false });
         } catch (error) {
             set({ error: error.response?.data?.message, isLoading: false });
         }

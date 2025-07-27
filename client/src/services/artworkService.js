@@ -15,7 +15,12 @@ export const getArtworksService = async () => {
     return await api.get("artworks");
 };
 
+// Get the artworks from auction with provided auction id
+export const getAuctionArtworksService = async (id) => {
+    return await api.get(`artworks/auction/${id}`);
+};
+
 // Get artwork with provided id
 export const getArtworkService = async (id) => {
     return await api.get(`artworks/${id}`);
-}
+};

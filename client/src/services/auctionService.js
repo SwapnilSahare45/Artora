@@ -4,3 +4,8 @@ import { api } from "./api"
 export const getAuctionsService = async () => {
     return await api.get("auctions");
 }
+
+// Get a single auction
+export const getAuctionService = async (id) => {
+    return await api.get(`auctions/${id}`);
+}
