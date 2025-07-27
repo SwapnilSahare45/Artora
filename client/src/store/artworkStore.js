@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { addArtworkService, getArtworkService, getArtworksService, getAuctionArtworksService, getMyArtworksService } from "../services/artworkService";
+import { addArtworkService, deleteArworkService, getArtworkService, getArtworksService, getAuctionArtworksService, getMyArtworksService, updateArtworkService } from "../services/artworkService";
 
 // Create a zustand store for artwork
 export const useArtworkStore = create((set) => ({
@@ -61,6 +61,30 @@ export const useArtworkStore = create((set) => ({
             set({ artwork: response.data.artwork, isLoading: false });
         } catch (error) {
             set({ error: error.response?.data?.message, isLoading: false });
+        }
+    },
+
+    // Update artwork
+    updateArtwork: async (id, data) => {
+        set({ isLoading: true });
+        try {
+            await updateArtworkService(id, data);
+            set({ isLoading: false });
+            return { success: true };
+        } catch (error) {
+            set({ error: error.response.data?.message, isLoading: false });
+        }
+    },
+
+    // Delete artwork
+    deleteArtwork: async (id) => {
+        set({ isLoading: true });
+        try {
+            await deleteArworkService(id);
+            set({ isLoading: false });
+            return { success: true };
+        } catch (error) {
+            set({ error: error.response.data?.message, isLoading: false });
         }
     },
 }));

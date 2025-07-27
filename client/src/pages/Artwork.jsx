@@ -75,7 +75,7 @@ const Artwork = () => {
                 <img
                   src={previewImage || artwork?.images[0]}
                   alt={artwork?.title}
-                  className="w-full h-96 object-cover rounded shadow"
+                  className="w-full h-96 object-center rounded shadow"
                 />
 
                 <div

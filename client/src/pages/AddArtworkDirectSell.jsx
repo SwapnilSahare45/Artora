@@ -1,13 +1,46 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useArtworkStore } from "../store/artworkStore";
 import { toast } from "react-toastify";
+import { useNavigate, useParams } from "react-router-dom";
 
 const AddArtworkDirect = () => {
 
+  const { id } = useParams();
+
+  const navigate = useNavigate();
+
+  // Get the states from artwork store
+  const { addArtwork, getArtwork, updateArtwork, artwork, isLoading, error } = useArtworkStore();
+
+  // Fetch the artwork when component mount. Used when artwork update
+  useEffect(() => {
+    const fetchArtwork = async (id) => {
+      await getArtwork(id);
+    };
+    fetchArtwork(id);
+  }, [getArtwork]);
+
   // State to hold artwork data
   const [artworkData, setArtworkData] = useState({ title: '', artist: '', price: '', category: '', size: '', medium: '', style: '', orientation: '', description: '' });
+
+  // Pre-fill the artworkData state using existing artwork
+  useEffect(() => {
+    if (artwork) {
+      setArtworkData({
+        title: artwork.title || "",
+        artist: artwork.artist || "",
+        price: artwork.price || "",
+        category: artwork.category || "",
+        size: artwork.size || "",
+        medium: artwork.medium || "",
+        style: artwork.style || "",
+        orientation: artwork.orientation || "",
+        description: artwork.description || "",
+      });
+    }
+  }, [artwork])
 
   // To hold reference of thumbnail and images
   const thumbnailRef = useRef(null);
@@ -26,9 +59,6 @@ const AddArtworkDirect = () => {
   const mediums = ["Oil", "Acrylic", "Watercolor", "Digital", "Mixed Media", "Other"];
   const styles = ["Abstract", "Realism", "Impressionism", "Minimalist", "Contemporary", "Other"];
   const orientations = ["Portrait", "Landscape", "Square", "Panoramic", "Other"];
-
-  // Get the states from artwork store
-  const { addArtwork, isLoading, error } = useArtworkStore();
 
   // Function to handle add artwork
   const handleAddArtwork = async () => {
@@ -97,6 +127,32 @@ const AddArtworkDirect = () => {
     }
   }
 
+  // Function to handle update artwork
+  const handleUpdateArtwork = async () => {
+    // Append the data
+    const data = new FormData();
+    data.append('title', artworkData.title);
+    data.append('artist', artworkData.artist);
+    data.append('price', artworkData.price);
+    data.append('category', artworkData.category);
+    data.append('size', artworkData.size);
+    data.append('medium', artworkData.medium);
+    data.append('style', artworkData.style);
+    data.append('orientation', artworkData.orientation);
+    data.append('description', artworkData.description);
+    data.append('thumbnail', selectedThumbnail);
+    // Append images one-by-one under the same key
+    selectedImages.forEach((img) => {
+      data.append("images", img);
+    });
+
+    const { success } = await updateArtwork(id, data);
+    if (success) {
+      toast.success("Artwork updated successfully.");
+      navigate("/profile")
+    }
+  }
+
   // Show error
   if (error) {
     return <p>{error}</p>
@@ -130,7 +186,7 @@ const AddArtworkDirect = () => {
                 type="text"
                 placeholder="Enter artwork name"
                 className="w-full border border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-700 text-black dark:text-white rounded px-4 py-2 focus:ring-2 focus:ring-primary outline-none"
-                value={artworkData.title}
+                value={artworkData.title || artwork?.title}
                 onChange={(e) => setArtworkData({ ...artworkData, title: e.target.value })}
               />
               {errors.title && <p className="text-red-500 text-sm pl-2 mt-1">{errors.title}</p>}
@@ -143,7 +199,7 @@ const AddArtworkDirect = () => {
                 type="text"
                 placeholder="Enter artist name"
                 className="w-full border border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-700 text-black dark:text-white rounded px-4 py-2 focus:ring-2 focus:ring-primary outline-none"
-                value={artworkData.artist}
+                value={artworkData.artist || artwork?.artist}
                 onChange={(e) => setArtworkData({ ...artworkData, artist: e.target.value })}
               />
               {errors.artist && <p className="text-red-500 text-sm pl-2 mt-1">{errors.artist}</p>}
@@ -156,7 +212,7 @@ const AddArtworkDirect = () => {
                 type="number"
                 placeholder="Enter price"
                 className="w-full border border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-700 text-black dark:text-white rounded px-4 py-2 focus:ring-2 focus:ring-primary outline-none"
-                value={artworkData.price}
+                value={artworkData.price || artwork?.price}
                 onChange={(e) => setArtworkData({ ...artworkData, price: e.target.value })}
               />
               {errors.price && <p className="text-red-500 text-sm pl-2 mt-1">{errors.price}</p>}
@@ -167,7 +223,7 @@ const AddArtworkDirect = () => {
               <label className="block mb-2 font-medium">Category</label>
               <select
                 className="w-full border border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-700 text-black dark:text-white rounded px-4 py-2 outline-none"
-                value={artworkData.category}
+                value={artworkData.category || artwork?.category}
                 onChange={(e) => setArtworkData({ ...artworkData, category: e.target.value })}
               >
                 <option
@@ -192,7 +248,7 @@ const AddArtworkDirect = () => {
               <label className="block mb-2 font-medium">Size</label>
               <select
                 className="w-full border border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-700 text-black dark:text-white rounded px-4 py-2 outline-none"
-                value={artworkData.size}
+                value={artworkData.size || artwork?.size}
                 onChange={(e) => setArtworkData({ ...artworkData, size: e.target.value })}
               >
                 <option
@@ -217,7 +273,7 @@ const AddArtworkDirect = () => {
               <label className="block mb-2 font-medium">Medium</label>
               <select
                 className="w-full border border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-700 text-black dark:text-white rounded px-4 py-2 outline-none"
-                value={artworkData.medium}
+                value={artworkData.medium || artwork?.medium}
                 onChange={(e) => setArtworkData({ ...artworkData, medium: e.target.value })}
               >
                 <option
@@ -242,7 +298,7 @@ const AddArtworkDirect = () => {
               <label className="block mb-2 font-medium">Style</label>
               <select
                 className="w-full border border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-700 text-black dark:text-white rounded px-4 py-2 outline-none"
-                value={artworkData.style}
+                value={artworkData.style || artwork?.style}
                 onChange={(e) => setArtworkData({ ...artworkData, style: e.target.value })}
               >
                 <option
@@ -267,7 +323,7 @@ const AddArtworkDirect = () => {
               <label className="block mb-2 font-medium">Orientation</label>
               <select
                 className="w-full border border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-700 text-black dark:text-white rounded px-4 py-2 outline-none"
-                value={artworkData.orientation}
+                value={artworkData.orientation || artwork?.orientation}
                 onChange={(e) => setArtworkData({ ...artworkData, orientation: e.target.value })}
               >
                 <option
@@ -298,7 +354,7 @@ const AddArtworkDirect = () => {
                 rows="4"
                 placeholder="Describe your artwork"
                 className="w-full border border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-700 text-black dark:text-white rounded px-4 py-2 outline-none"
-                value={artworkData.description}
+                value={artworkData.description || artwork?.description}
                 onChange={(e) => setArtworkData({ ...artworkData, description: e.target.value })}
               ></textarea>
               {errors.description && <p className="text-red-500 text-sm pl-2 mt-1">{errors.description}</p>}
@@ -337,7 +393,7 @@ const AddArtworkDirect = () => {
                 type="button"
                 className="bg-primary dark:bg-white text-white dark:text-black px-6 py-2 rounded-lg font-medium hover:opacity-90 transition"
                 disabled={isLoading}
-                onClick={handleAddArtwork}
+                onClick={!artwork ? handleAddArtwork : handleUpdateArtwork}
               >
                 {isLoading ? "Adding..." : "Submit Artwork"}
               </button>

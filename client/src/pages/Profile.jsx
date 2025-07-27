@@ -7,18 +7,22 @@ import { useArtworkStore } from "../store/artworkStore";
 import { useAuthStore } from "../store/authStore";
 import ProfileSkeleton from "../components/skeleton/profileSkeleton";
 import MyArtworkCardSkeleton from "../components/skeleton/MyArtworkCardSkeleton";
+import { toast } from "react-toastify";
 
 const Profile = () => {
-  // State for to edit option
+  // State to hold edit
   const [isEditing, setIsEditing] = useState(false);
-  // state for user avatar to edit
+  // state to hold user avatar when edit
   const [avatarFile, setAvatarFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
+
+  // State to hold filter artworks
+  const [filterArtworks, setFilterArtworks] = useState([]);
 
   // Get the states from auth store
   const { profile, user, isLoading: profileLoading, updateProfile, error: profileError } = useAuthStore();
   // Get the states from artwork store
-  const { getMyArtworks, artworks, isLoading: artworksLoading, error: artworkError } = useArtworkStore();
+  const { getMyArtworks, deleteArtwork, artworks, isLoading: artworksLoading, error: artworkError } = useArtworkStore();
 
   // Fetch logged-in user profile and logged-in user artworks when component mount
   useEffect(() => {
@@ -32,6 +36,13 @@ const Profile = () => {
     };
     fetchGetMyArtworks();
   }, [profile, getMyArtworks]);
+
+  // Set artworks on filterArtworks state when component mount
+  useEffect(() => {
+    if (artworks) {
+      setFilterArtworks(artworks);
+    }
+  }, [artworks]);
 
   // Handle avatar change and set the preview of avatar
   const handleAvatarChange = async (e) => {
@@ -60,6 +71,16 @@ const Profile = () => {
     // If profile update successfully set the isEdit state to false
     if (success) {
       setIsEditing(false);
+    }
+  }
+
+  // Handle delete artwork
+  const handleDeleteArtwork = async (id) => {
+    const { success } = await deleteArtwork(id);
+    if (success) {
+      toast.success("Artwork deleted successfully.");
+      // filter the deleted artwork
+      setFilterArtworks(prev => prev.filter(art => art._id !== id));
     }
   }
 
@@ -260,7 +281,7 @@ const Profile = () => {
             // Conditional redering for artworks and artwork loading state
             artworks ? (
               !artworksLoading ? (
-                artworks.map((art) => (
+                filterArtworks.map((art) => (
                   <div
                     key={art?._id}
                     className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow"
@@ -283,16 +304,21 @@ const Profile = () => {
                     <div
                       className="flex justify-end gap-3"
                     >
-                      <button
-                        className="text-primary hover:underline text-sm flex items-center gap-1"
-                      >
-                        <Edit
-                          className="w-4 h-4"
-                        />
-                        Edit
-                      </button>
+                      {
+                        // Only direct sell artwork can be edit
+                        !art.inAuction &&
+                        <Link
+                          to={!art.inAuction && `/update-artwork-direct/${art._id}`}
+                          className="text-primary hover:underline text-sm flex items-center gap-1"
+                        >
+                          <Edit className="w-4 h-4" />
+                          Edit
+                        </Link>
+                      }
+
                       <button
                         className="text-red-500 hover:underline text-sm flex items-center gap-1"
+                        onClick={() => handleDeleteArtwork(art._id)}
                       >
                         <Trash2
                           className="w-4 h-4"

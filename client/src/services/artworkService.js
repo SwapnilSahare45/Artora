@@ -24,3 +24,13 @@ export const getAuctionArtworksService = async (id) => {
 export const getArtworkService = async (id) => {
     return await api.get(`artworks/${id}`);
 };
+
+// Update artwork with provided id and data
+export const updateArtworkService = async (id, data) => {
+    return await api.put(`artworks/${id}`, data);
+};
+
+// Delete artwork with provided id
+export const deleteArworkService = async (id) => {
+    return await api.delete(`artworks/${id}`);
+};
