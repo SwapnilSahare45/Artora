@@ -202,15 +202,9 @@ exports.updateArtwork = async (req, res) => {
 
     const updateFields = req.body;
 
-    // Block updates to price and openingBid
-    if ('price' in updateFields || 'openingBid' in updateFields) {
-      return res.status(400).json({ message: "Price and Opening Bid cannot be updated once artwork is created" });
-    }
-
     const allowedFields = [
       "title", "price", "artist", "category", "size", "medium",
-      "style", "orientation", "description", "inAuction", "openingBid"
-    ];
+      "style", "orientation", "description, thumbnail, images"];
 
     // Only allow updates to specific fields
     const sanitizedUpdate = {};

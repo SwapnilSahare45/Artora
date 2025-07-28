@@ -48,13 +48,15 @@ exports.getWishlist = async (req, res) => {
 
 exports.removeFromWishlist = async (req, res) => {
     try {
-        const { id } = req.params;
+        const artwork = req.params.id;
 
-        // Remove the wishlist item by its ID
-        const removedItem = await Wishlist.findByIdAndDelete(id);
-        if (!removedItem) {
-            return res.status(404).json({ message: "Item not found" });
+        const item = await Wishlist.find({ artwork });
+        if (!item) {
+            return res.status(404).json({ message: "Item not found." });
         }
+
+        // Artwork remove from the wishlist
+        await Wishlist.deleteOne({ artwork });
 
         res.status(200).json({ message: "Artwork remove from wishlist" });
     } catch (error) {
