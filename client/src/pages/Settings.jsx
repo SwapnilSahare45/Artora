@@ -1,27 +1,69 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Pencil } from "lucide-react";
+import { useAuthStore } from "../store/authStore";
+import { toast } from "react-toastify";
 
 const settingsTabs = ["Profile", "Security"];
 
 const Settings = () => {
+
+  // State to hold activeTab
   const [activeTab, setActiveTab] = useState("Profile");
 
-  const [username, setUsername] = useState("John Doe");
-  const [bio, setBio] = useState("Artist | Painter | Dreamer");
-  const [profilePic, setProfilePic] = useState("/default-profile.png");
+  const { updateProfile, profile, user, error } = useAuthStore();
 
-  const handleImageChange = (e) => {
+  // Fetch the logged-in user profile when component mount or profile changes
+  useEffect(() => {
+    profile();
+  }, [profile]);
+
+  // Set user to updateProfile state when component mount or user changes
+  useEffect(() => {
+    if (user) setUpdateUser(user);
+  }, [user]);
+
+  // State to hold user data(name, bio)
+  const [updateUser, setUpdateUser] = useState({ name: '', bio: '' });
+
+  // State to hold avatarFile
+  const [avatarFile, setAvatarFile] = useState(null);
+
+  // State to hold avatarPreview url
+  const [avatarPreview, setAvatarPreview] = useState(null);
+
+  // Function to handle avatar change
+  const handleAvatarChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setProfilePic(reader.result);
-      };
-      reader.readAsDataURL(file);
+      setAvatarFile(file);
+      setAvatarPreview(URL.createObjectURL(file));
     }
-  };
+  }
+
+  // Function to handle update
+  const handleUpdate = async () => {
+    // Append edit data
+    const data = new FormData();
+    data.append('avatar', avatarFile);
+    data.append('name', user.name);
+    data.append('bio', user.bio);
+
+    const success = await updateProfile(data);
+    // When profile update successfully then show an success message and
+    // set the isEditing state to false
+    if (success) {
+      toast.success("Profile update successfully.");
+    }
+  }
+
+  // Show an error when component mount or error changes
+  useEffect(() => {
+    if(error){
+      toast.error(error);
+    }
+  }, [error]);
 
   return (
     <main className="min-h-screen bg-gray-50 dark:bg-gray-900 text-black dark:text-white">
@@ -35,11 +77,10 @@ const Settings = () => {
               <li key={tab}>
                 <button
                   onClick={() => setActiveTab(tab)}
-                  className={`w-full text-left px-4 py-2 rounded transition ${
-                    activeTab === tab
-                      ? "bg-primary text-white"
-                      : "hover:bg-gray-100 dark:hover:bg-gray-800"
-                  }`}
+                  className={`w-full text-left px-4 py-2 rounded transition ${activeTab === tab
+                    ? "bg-primary text-white"
+                    : "hover:bg-gray-100 dark:hover:bg-gray-800"
+                    }`}
                 >
                   {tab}
                 </button>
@@ -57,7 +98,7 @@ const Settings = () => {
               {/* Profile Picture Upload */}
               <div className="relative w-24 h-24">
                 <img
-                  src={profilePic}
+                  src={avatarPreview || user?.avatar}
                   alt="Profile"
                   className="w-24 h-24 rounded-full object-cover border dark:border-gray-600"
                 />
@@ -70,8 +111,8 @@ const Settings = () => {
                     type="file"
                     id="profileUpload"
                     accept="image/*"
-                    onChange={handleImageChange}
                     className="hidden"
+                    onChange={handleAvatarChange}
                   />
                 </label>
               </div>
@@ -79,23 +120,26 @@ const Settings = () => {
               {/* Username Input */}
               <input
                 type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
                 placeholder="Username"
                 className="w-full p-3 rounded border dark:border-gray-600 bg-white dark:bg-gray-800"
+                value={updateUser.name}
+                onChange={(e) => setUser({ ...updateUser, name: e.target.value })}
               />
 
               {/* Bio Input */}
               <textarea
-                value={bio}
-                onChange={(e) => setBio(e.target.value)}
                 placeholder="Write a short bio..."
                 rows={4}
                 className="w-full p-3 rounded border dark:border-gray-600 bg-white dark:bg-gray-800"
+                value={updateUser.bio}
+                onChange={(e) => setUser({ ...updateUser, bio: e.target.value })}
               />
 
               {/* Save Button */}
-              <button className="bg-primary text-white px-6 py-2 rounded hover:bg-primary/90 transition">
+              <button
+                className="bg-primary text-white px-6 py-2 rounded hover:bg-primary/90 transition"
+                onClick={handleUpdate}
+              >
                 Save Changes
               </button>
             </div>
