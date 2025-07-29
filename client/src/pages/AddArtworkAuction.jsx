@@ -1,6 +1,6 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useArtworkStore } from "../store/artworkStore";
 import { toast } from "react-toastify";
@@ -28,7 +28,6 @@ const AddArtworkAuction = () => {
 
   // State to hold validation error
   const [errors, setErrors] = useState({ title: '', artist: '', openingBid: '', category: '', size: '', medium: '', style: '', orientation: '', description: '', thumbnail: '', images: '' });
-
 
   // Get the states from artwork store
   const { addArtwork, isLoading, error } = useArtworkStore();
@@ -101,31 +100,26 @@ const AddArtworkAuction = () => {
     }
   }
 
-  // Show error
-  if (error) {
-    return <p>{error}</p>
-  }
+  // Show an error when component mount or error changes
+  useEffect(() => {
+    if (error) {
+      toast.error(error);
+    }
+  }, [error]);
+
 
   return (
     <>
       <Navbar />
 
-      <main
-        className="bg-gray-50 dark:bg-gray-900 text-black dark:text-white min-h-screen pt-24 px-6 md:px-16 pb-10"
-      >
+      <main className="bg-gray-50 dark:bg-gray-900 text-black dark:text-white min-h-screen pt-24 px-6 md:px-16 pb-10">
         {/* Add artwork section */}
-        <section
-          className="max-w-5xl mx-auto bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg"
-        >
-          <h1
-            className="text-3xl font-bold mb-8 text-center"
-          >
+        <section className="max-w-5xl mx-auto bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg">
+          <h1 className="text-3xl font-bold mb-8 text-center">
             Add Artwork for Auction
           </h1>
 
-          <div
-            className="grid grid-cols-1 md:grid-cols-2 gap-6"
-          >
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
             <div>
               <label className="block mb-2 font-medium">Art Name</label>

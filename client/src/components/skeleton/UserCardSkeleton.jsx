@@ -2,9 +2,7 @@ import Skeleton from 'react-loading-skeleton'
 
 const UserCardSkeleton = () => {
     return (
-        <div
-            className="bg-white text-black dark:bg-gray-800 dark:text-white rounded-lg p-4 shadow-sm hover:shadow-md transition flex flex-col items-center text-center"
-        >
+        <div className="bg-white text-black dark:bg-gray-800 dark:text-white rounded-lg p-4 shadow-sm hover:shadow-md transition flex flex-col items-center text-center">
             {/* Avatar */}
             <Skeleton
                 width={80}

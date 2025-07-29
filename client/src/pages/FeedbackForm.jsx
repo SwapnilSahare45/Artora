@@ -1,21 +1,44 @@
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Star } from "lucide-react";
+import { useFeedbackStore } from "../store/feedbackStore";
+import { toast } from "react-toastify";
 
 const FeedbackForm = () => {
-  const [rating, setRating] = useState(0);
+
+  // State to hold rating
+  const [rating, setRating] = useState(5);
+  // State to hold feedback
   const [feedback, setFeedback] = useState("");
 
-  const handleSubmit = () => {
-    // You can replace this with your actual API call
-    console.log("Rating:", rating);
-    console.log("Feedback:", feedback);
-    // Optionally reset after submit
-    setRating(0);
-    setFeedback("");
-    alert("Thank you for your feedback!");
-  };
+  // States from feedback store
+  const { giveFeedback, isLoading, error } = useFeedbackStore();
+
+  // Handle send feedback
+  const handleFeedback = async () => {
+
+    if (!feedback) {
+      toast.error("Please write feedback.");
+    }
+
+    const success = await giveFeedback(rating, feedback);
+
+    // Show the success message when feedback submit successfully and 
+    // set rating 5 and clear feedback
+    if (success) {
+      toast.success("Thanks!");
+      setRating(5);
+      setFeedback("");
+    }
+  }
+
+  // Show an error when component mount or error changes
+  useEffect(() => {
+    if (error) {
+      toast.error(error);
+    }
+  }, [error])
 
   return (
     <>
@@ -36,9 +59,8 @@ const FeedbackForm = () => {
                 <Star
                   key={star}
                   onClick={() => setRating(star)}
-                  className={`h-7 w-7 cursor-pointer transition ${
-                    star <= rating ? "text-yellow-500 fill-yellow-400" : "text-gray-400"
-                  }`}
+                  className={`h-7 w-7 cursor-pointer transition ${star <= rating ? "text-yellow-500 fill-yellow-400" : "text-gray-400"
+                    }`}
                 />
               ))}
             </div>
@@ -58,10 +80,11 @@ const FeedbackForm = () => {
 
           {/* Submit Button */}
           <button
-            onClick={handleSubmit}
             className="w-full bg-primary text-white font-medium py-2.5 rounded-md hover:bg-primary/90 transition"
+            disabled={isLoading}
+            onClick={handleFeedback}
           >
-            Submit Feedback
+            {!isLoading ? "Submit Feedback" : "Submitting..."}
           </button>
         </div>
       </main>

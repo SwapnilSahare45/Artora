@@ -14,13 +14,13 @@ const AddArtworkDirect = () => {
   // Get the states from artwork store
   const { addArtwork, getArtwork, updateArtwork, artwork, isLoading, error } = useArtworkStore();
 
-  // Fetch the artwork when component mount. Used when artwork update
+  // Fetch the artwork details when component mount or when artwork id changes.
+  // Used when artwork update
   useEffect(() => {
-    const fetchArtwork = async (id) => {
-      await getArtwork(id);
-    };
-    fetchArtwork(id);
-  }, [getArtwork]);
+    if (id) {
+      getArtwork(id);
+    }
+  }, [id, getArtwork]);
 
   // State to hold artwork data
   const [artworkData, setArtworkData] = useState({ title: '', artist: '', price: '', category: '', size: '', medium: '', style: '', orientation: '', description: '' });
@@ -153,31 +153,24 @@ const AddArtworkDirect = () => {
     }
   }
 
-  // Show error
-  if (error) {
-    return <p>{error}</p>
-  }
+  useEffect(() => {
+    if (error) {
+      toast.error(error);
+    }
+  }, [error]);
 
   return (
     <>
       <Navbar />
-      <main
-        className="bg-gray-50 dark:bg-gray-900 text-black dark:text-white min-h-screen pt-24 px-6 md:px-16 pb-10"
-      >
+      <main className="bg-gray-50 dark:bg-gray-900 text-black dark:text-white min-h-screen pt-24 px-6 md:px-16 pb-10">
 
         {/* Form secton */}
-        <section
-          className="max-w-5xl mx-auto bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg"
-        >
-          <h1
-            className="text-3xl font-bold mb-8 text-center"
-          >
+        <section className="max-w-5xl mx-auto bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg">
+          <h1 className="text-3xl font-bold mb-8 text-center">
             Add Artwork for Direct Sale
           </h1>
 
-          <div
-            className="grid grid-cols-1 md:grid-cols-2 gap-6"
-          >
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
             {/* Artwork Title */}
             <div>
@@ -226,9 +219,7 @@ const AddArtworkDirect = () => {
                 value={artworkData.category || artwork?.category}
                 onChange={(e) => setArtworkData({ ...artworkData, category: e.target.value })}
               >
-                <option
-                  value=""
-                >
+                <option value="">
                   Select category
                 </option>
                 {categories.map((cat, i) => (
@@ -251,9 +242,7 @@ const AddArtworkDirect = () => {
                 value={artworkData.size || artwork?.size}
                 onChange={(e) => setArtworkData({ ...artworkData, size: e.target.value })}
               >
-                <option
-                  value=""
-                >
+                <option value="">
                   Select size
                 </option>
                 {sizes.map((item, i) => (
@@ -276,9 +265,7 @@ const AddArtworkDirect = () => {
                 value={artworkData.medium || artwork?.medium}
                 onChange={(e) => setArtworkData({ ...artworkData, medium: e.target.value })}
               >
-                <option
-                  value=""
-                >
+                <option value="">
                   Select medium
                 </option>
                 {mediums.map((item, i) => (
@@ -301,9 +288,7 @@ const AddArtworkDirect = () => {
                 value={artworkData.style || artwork?.style}
                 onChange={(e) => setArtworkData({ ...artworkData, style: e.target.value })}
               >
-                <option
-                  value=""
-                >
+                <option value="">
                   Select style
                 </option>
                 {styles.map((item, i) => (
@@ -326,9 +311,7 @@ const AddArtworkDirect = () => {
                 value={artworkData.orientation || artwork?.orientation}
                 onChange={(e) => setArtworkData({ ...artworkData, orientation: e.target.value })}
               >
-                <option
-                  value=""
-                >
+                <option value="">
                   Select orientation
                 </option>
                 {orientations.map((item, i) => (
@@ -345,11 +328,7 @@ const AddArtworkDirect = () => {
 
             {/* Description */}
             <div className="md:col-span-2">
-              <label
-                className="block mb-2 font-medium"
-              >
-                Description
-              </label>
+              <label className="block mb-2 font-medium">Description</label>
               <textarea
                 rows="4"
                 placeholder="Describe your artwork"

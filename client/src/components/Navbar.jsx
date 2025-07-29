@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { Menu, X, Bell, Heart, MessageCircle, User, LogOut, ShoppingBag, Settings, } from "lucide-react";
 import logo from "../assets/logo.png";
+import { useAuthStore } from "../store/authStore";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -10,11 +11,13 @@ const Navbar = () => {
   const [theme, setTheme] = useState(() => localStorage.getItem("theme") || "system");
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
+  // set the value when component mount or location changes
   useEffect(() => {
     setMounted(true);
     setIsOpen(false); // close mobile menu on route change
   }, [location]);
 
+  // Theme
   useEffect(() => {
     let root = window.document.documentElement;
     if (theme === "dark") {
@@ -37,7 +40,7 @@ const Navbar = () => {
           ? "dark"
           : "light");
 
-      apply();                           // initial run
+      apply();
       const mq = window.matchMedia("(prefers-color-scheme: dark)");
       mq.addEventListener("change", apply);
       return () => mq.removeEventListener("change", apply); // cleanup
@@ -47,10 +50,16 @@ const Navbar = () => {
     localStorage.setItem("theme", theme);
   }, [theme]);
 
-
   /* ─── Auth placeholder ──────────────────────── */
-  const isAuth = true;
-  const userAvatar = "https://i.pravatar.cc/32?img=25";
+  // States from auth store
+  const { profile, user } = useAuthStore();
+
+  // Fetch the profile when component mount or profile channges
+  useEffect(() => {
+    profile();
+  }, [profile]);
+
+  const isAuth = !!user;
 
   const baseLinks = [
     { name: "Home", path: "/" },
@@ -64,17 +73,10 @@ const Navbar = () => {
     { name: "Register", path: "/register" },
   ];
 
-  /* ─── JSX ───────────────────────────────────── */
   return (
-    <header
-      className="fixed inset-x-0 top-0 z-50 bg-white dark:bg-gray-900 border-b dark:border-gray-700 border-gray-200"
-    >
-      <div
-        className="max-w-7xl mx-auto flex items-center justify-between px-4 py-3 md:py-4"
-      >
-        <div
-          className="flex items-center"
-        >
+    <header className="fixed inset-x-0 top-0 z-50 bg-white dark:bg-gray-900 border-b dark:border-gray-700 border-gray-200">
+      <div className="max-w-7xl mx-auto flex items-center justify-between px-4 py-3 md:py-4">
+        <div className="flex items-center">
           <img
             src={logo}
             alt="ARTORA"
@@ -89,9 +91,7 @@ const Navbar = () => {
         </div>
 
         {/* Desktop nav */}
-        <nav
-          className="hidden md:flex items-center gap-6"
-        >
+        <nav className="hidden md:flex items-center gap-6">
           {baseLinks.map((l) => (
             <NavLink
               key={l.name}
@@ -160,17 +160,13 @@ const Navbar = () => {
               </NavLink>
 
               {/* Profile dropdown */}
-              <div
-                className="group relative bg-gray-50 text-black dark:bg-gray-900 dark:text-white"
-              >
+              <div className="group relative bg-gray-50 text-black dark:bg-gray-900 dark:text-white">
                 <img
-                  src={userAvatar}
+                  src={user.avatar}
                   alt="profile"
                   className="w-8 h-8 rounded-full cursor-pointer"
                 />
-                <div
-                  className="absolute -right-10 w-40 bg-white dark:bg-gray-800 rounded shadow-lg hidden group-hover:block"
-                >
+                <div className="absolute -right-10 w-40 bg-white dark:bg-gray-800 rounded shadow-lg hidden group-hover:block">
                   <Link
                     to="/profile"
                     className="flex items-center gap-2 px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700"
@@ -209,9 +205,7 @@ const Navbar = () => {
               Theme: {theme.charAt(0).toUpperCase() + theme.slice(1)}
             </button>
             {dropdownOpen && (
-              <ul
-                className="absolute right-0 mt-2 w-32 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 dark:text-white rounded shadow text-sm z-50"
-              >
+              <ul className="absolute right-0 mt-2 w-32 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 dark:text-white rounded shadow text-sm z-50">
                 {["light", "dark", "system"].map((option) => (
                   <li
                     key={option}
@@ -233,7 +227,7 @@ const Navbar = () => {
         {/* Mobile toggle */}
         <button
           className="md:hidden text-gray-700 dark:text-gray-300"
-          onClick={() => setOpen(!open)}
+          onClick={() => setIsOpen(!open)}
         >
           {open ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
         </button>
@@ -241,14 +235,12 @@ const Navbar = () => {
 
       {/* Mobile menu */}
       {open && (
-        <nav
-          className="md:hidden bg-white dark:bg-gray-900 px-4 pb-4"
-        >
+        <nav className="md:hidden bg-white dark:bg-gray-900 px-4 pb-4">
           {[...baseLinks, ...(isAuth ? [] : guestLinks)].map((l) => (
             <NavLink
               key={l.name}
               to={l.path}
-              onClick={() => setOpen(false)}
+              onClick={() => setIsOpen(false)}
               className={({ isActive }) =>
                 `block py-2 font-medium ${isActive
                   ? "text-primary"
@@ -267,7 +259,7 @@ const Navbar = () => {
                   <NavLink
                     key={p}
                     to={p}
-                    onClick={() => setOpen(false)}
+                    onClick={() => setIsOpen(false)}
                     className="block py-2 font-medium text-gray-700 dark:text-gray-300"
                   >
                     {p.replace("/", "").charAt(0).toUpperCase() + p.slice(2)}
@@ -276,7 +268,7 @@ const Navbar = () => {
               )}
               <button
                 onClick={() => {
-                  setOpen(false);
+                  setIsOpen(false);
                   /* logout */
                 }}
                 className="block w-full text-left py-2 font-medium text-gray-700 dark:text-gray-300"
@@ -287,9 +279,7 @@ const Navbar = () => {
           )}
 
           {/* mobile theme selector */}
-          <div
-            className="relative mt-2"
-          >
+          <div className="relative mt-2">
             <button
               onClick={() => setDropdownOpen(!dropdownOpen)}
               className="bg-gray-100 dark:bg-gray-800 px-3 py-2 rounded text-sm text-gray-700 dark:text-gray-200 w-full text-left"
@@ -297,9 +287,7 @@ const Navbar = () => {
               Theme: {theme.charAt(0).toUpperCase() + theme.slice(1)}
             </button>
             {dropdownOpen && (
-              <ul
-                className="absolute right-0 mt-2 w-32 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded shadow text-sm z-50"
-              >
+              <ul className="absolute right-0 mt-2 w-32 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded shadow text-sm z-50">
                 {["light", "dark", "system"].map((option) => (
                   <li
                     key={option}

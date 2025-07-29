@@ -12,7 +12,7 @@ const Login = () => {
   // State to hold validation error
   const [errors, setErrors] = useState({ email: '', password: '' });
 
-  // Get login fucntion, loadin state, and error from auth store
+  // States from auth store
   const { login, error, isLoading } = useAuthStore();
 
   const navigate = useNavigate();

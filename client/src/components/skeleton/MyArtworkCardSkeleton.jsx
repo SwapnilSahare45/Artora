@@ -3,9 +3,7 @@ import Skeleton from 'react-loading-skeleton'
 
 const MyArtworkCardSkeleton = () => {
     return (
-        <div
-            className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow"
-        >
+        <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
             {/* Image */}
             <Skeleton
                 height={160}
@@ -23,9 +21,7 @@ const MyArtworkCardSkeleton = () => {
             />
 
             {/* Edit and delete button */}
-            <div
-                className="flex justify-end gap-3"
-            >
+            <div className="flex justify-end gap-3">
                 <Skeleton
                     width={50}
                     height={20}

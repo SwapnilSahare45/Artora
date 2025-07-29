@@ -13,14 +13,14 @@ const Register = () => {
   // State to hold validation errors
   const [errors, setErrors] = useState({ name: '', email: '', password: '' })
 
-  // Get register function, loading state, and error from auth store
+  // States from auth store
   const { register, isLoading, error } = useAuthStore();
 
   const navigate = useNavigate();
 
   // Function to handle new user registeration
   const handleRegister = async () => {
-    // object to stoare validation error
+    // object to store validation error
     const newErrors = { name: '', email: '', password: '' };
 
     // Validation
@@ -54,49 +54,29 @@ const Register = () => {
   };
 
   return (
-    <main
-      className="grid grid-cols-1 md:grid-cols-2 h-auto bg-white md:h-screen"
-    >
+    <main className="grid grid-cols-1 md:grid-cols-2 h-auto bg-white md:h-screen">
 
       {/* Left Panel */}
-      <div
-        className="flex flex-col justify-center items-center gap-4 py-8 px-2 md:p-8"
-      >
-        <div
-          className="flex flex-col items-center gap-1"
-        >
+      <div className="flex flex-col justify-center items-center gap-4 py-8 px-2 md:p-8">
+        <div className="flex flex-col items-center gap-1">
           {/* Logo */}
           <img
             src={logo}
             alt="ARTORA"
             className="w-28"
           />
-          <h1
-            className="text-4xl tracking-widest text-primary"
-          >
-            ARTORA
-          </h1>
+          <h1 className="text-4xl tracking-widest text-primary">ARTORA</h1>
         </div>
-        <p
-          className="text-center text-gray-800 max-w-md"
-        >
+        <p className="text-center text-gray-800 max-w-md">
           Sign up to join the Art Auction community and start bidding on your favorite pieces!
         </p>
       </div>
 
       {/* Right Panel */}
-      <div
-        className="bg-primary/90 flex flex-col justify-center items-center py-8 px-6"
-      >
-        <h3
-          className="text-white text-3xl tracking-wider uppercase mb-8"
-        >
-          Sign Up
-        </h3>
+      <div className="bg-primary/90 flex flex-col justify-center items-center py-8 px-6">
+        <h3 className="text-white text-3xl tracking-wider uppercase mb-8">Sign Up</h3>
 
-        <div
-          className="w-full max-w-md flex flex-col gap-4"
-        >
+        <div className="w-full max-w-md flex flex-col gap-4">
           {/* Name input */}
           <input
             type="text"
@@ -139,25 +119,17 @@ const Register = () => {
         </div>
 
         {/* Sign up with Google */}
-        <div
-          className="mt-6 flex items-center gap-3 bg-white text-black px-4 py-2 rounded shadow cursor-pointer hover:bg-gray-100 transition"
-        >
+        <div className="mt-6 flex items-center gap-3 bg-white text-black px-4 py-2 rounded shadow cursor-pointer hover:bg-gray-100 transition">
           <img
             src={googleIcon}
             alt="Google"
             className="w-5 h-5"
           />
-          <span
-            className="text-sm font-medium"
-          >
-            Sign up with Google
-          </span>
+          <span className="text-sm font-medium">Sign up with Google</span>
         </div>
 
         {/* Login link */}
-        <p
-          className="mt-6 text-white text-sm"
-        >
+        <p className="mt-6 text-white text-sm">
           Already have an account?{' '}
           <Link
             to="/login"

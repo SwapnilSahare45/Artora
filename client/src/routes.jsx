@@ -9,7 +9,6 @@ import Auction from './pages/Auction';
 import Artworks from './pages/Artworks';
 import Artwork from './pages/Artwork';
 import Messages from './pages/Messages';
-import Payment from './pages/Payment';
 import Orders from './pages/Orders';
 import FeedbackForm from './pages/FeedbackForm';
 import Wishlist from './pages/Wishlist';
@@ -20,6 +19,7 @@ import AddArtworkDirectSell from './pages/AddArtworkDirectSell';
 import AddArtworkAuction from './pages/AddArtworkAuction';
 import Order from './pages/Order';
 import Otp from './pages/Otp';
+import PlaceOrder from './pages/PlaceOrder';
 
 const AppRoutes = () => {
     return (
@@ -43,7 +43,7 @@ const AppRoutes = () => {
             <Route path='order/:id' element={<Order />} />
             <Route path="wishlist" element={<Wishlist />} />
             <Route path="settings" element={<Settings />} />
-            <Route path="payment" element={<Payment />} />
+            <Route path="place-order/:id" element={<PlaceOrder />} />
             <Route path="feedback" element={<FeedbackForm />} />
             <Route path="*" element={<NotFound />} />
         </Routes>

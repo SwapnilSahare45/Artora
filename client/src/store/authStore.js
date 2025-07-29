@@ -37,7 +37,7 @@ export const useAuthStore = create((set) => ({
         set({ isLoading: true });
         try {
             const response = await loginUserService(data);
-            set({ user: response.data?.user, isLoading: false });
+            set({ user: response.data?.user, isAuth: true, isLoading: false });
             return { success: true };
         } catch (error) {
             console.log(error)
@@ -79,6 +79,7 @@ export const useAuthStore = create((set) => ({
         }
     },
 
+    // Get user profiles
     getUserProfile: async (id) => {
         set({ isLoading: true });
         try {

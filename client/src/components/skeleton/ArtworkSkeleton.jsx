@@ -2,17 +2,11 @@ import Skeleton from "react-loading-skeleton"
 
 const ArtworkSkeleton = () => {
   return (
-    <div
-      className="pt-28 pb-12 px-4 md:px-8 lg:px-24"
-    >
-      <div
-        className="grid grid-cols-1 md:grid-cols-2 gap-10"
-      >
+    <div className="pt-28 pb-12 px-4 md:px-8 lg:px-24">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
 
         {/* Image gallery */}
-        <div
-          className="space-y-4"
-        >
+        <div className="space-y-4">
           {/* Main image */}
           <Skeleton
             height={384}
@@ -20,9 +14,7 @@ const ArtworkSkeleton = () => {
           />
 
           {/* Other images */}
-          <div
-            className="flex gap-4"
-          >
+          <div className="flex gap-4">
             <Skeleton
               width={96}
               height={96}
@@ -47,9 +39,7 @@ const ArtworkSkeleton = () => {
         </div>
 
         {/* Artwork info */}
-        <div
-          className="space-y-4"
-        >
+        <div className="space-y-4">
           <Skeleton
             width="70%"
             height={30}
@@ -60,9 +50,7 @@ const ArtworkSkeleton = () => {
             className="mb-4"
           />
 
-          <div
-            className="space-y-2"
-          >
+          <div className="space-y-2">
             <Skeleton
               width="45%"
             />
@@ -90,9 +78,7 @@ const ArtworkSkeleton = () => {
           />
 
           {/* Price & Button */}
-          <div
-            className="mt-4 space-y-3"
-          >
+          <div className="mt-4 space-y-3">
             <Skeleton
               width="35%"
             />

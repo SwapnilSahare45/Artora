@@ -8,13 +8,13 @@ const Otp = () => {
     // State to hold user input value
     const [data, setData] = useState({ email: '', code: '' });
 
-    // Get verifyUser function, user state,Loading state, and error from auth store
+    // States from auth store
     const { user, verifyUser, isLoading, error } = useAuthStore();
 
     const navigate = useNavigate();
 
-    // When componet mount or user value change check email is present
-    // if not navigate to register else set the email in data state
+    // When componet mount or user value change check email is available or not.
+    // If not then navigate to register else set the email in data state
     useEffect(() => {
         if (!user?.email) {
             navigate("/register");
@@ -43,44 +43,30 @@ const Otp = () => {
     }
 
     return (
-        <main
-            className="grid grid-cols-1 md:grid-cols-2 h-auto bg-white md:h-screen"
-        >
+        <main className="grid grid-cols-1 md:grid-cols-2 h-auto bg-white md:h-screen">
             {/* Left Panel */}
-            <div
-                className="flex flex-col justify-center items-center gap-4 py-8 px-2 md:p-8"
-            >
-                <div
-                    className="flex flex-col items-center gap-1"
-                >
+            <div className="flex flex-col justify-center items-center gap-4 py-8 px-2 md:p-8">
+                <div className="flex flex-col items-center gap-1">
                     {/* Logo */}
                     <img
                         src={logo}
                         alt="ARTORA"
                         className="w-28"
                     />
-                    <h1
-                        className="text-4xl tracking-widest text-primary"
-                    >
+                    <h1 className="text-4xl tracking-widest text-primary">
                         ARTORA
                     </h1>
                 </div>
             </div>
 
             {/* Right Panel */}
-            <div
-                className="bg-primary/90 flex flex-col justify-center items-center py-8 px-6"
-            >
-                <h1
-                    className='text-3xl text-white'
-                >
+            <div className="bg-primary/90 flex flex-col justify-center items-center py-8 px-6">
+                <h1 className='text-3xl text-white'>
                     Verify OTP
                 </h1>
 
                 {/* Input fields */}
-                <div
-                    className="w-full max-w-md flex flex-col gap-4 mt-6"
-                >
+                <div className="w-full max-w-md flex flex-col gap-4 mt-6">
                     {/* OTP input */}
                     <input
                         type="Number"
