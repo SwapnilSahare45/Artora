@@ -197,9 +197,15 @@ const Artwork = () => {
                   ) : (
                     <>
                       {/* If it is in auction the show current bid time left and place bid button */}
-                      <p className="text-xl">
-                        Current Bid: ₹ {artwork?.currnetBid}
-                      </p>
+                      {
+                        artwork?.currnetBid <= 0 ? (
+                          <p className="text-xl">Opening Bid: ₹ {artwork?.openingBid}</p>
+                        ) : (
+                          <p className="text-xl">
+                            Current Bid: ₹ {artwork?.currnetBid}
+                          </p>
+                        )
+                      }
                       <p className="text-sm text-gray-600 dark:text-gray-300">
                         Time Left: {timeLeft || "Calculating..."}
                       </p>
