@@ -3,21 +3,21 @@ const Feedback = require("../models/feedback.model");
 exports.giveFeedback = async (req, res) => {
     try {
         const user = req.user.id;
-        const { rating, msg } = req.body;
+        const { rating, feedback } = req.body;
 
-        if (!rating || !msg) {
+        if (!rating || !feedback) {
             return res.status(400).json({ message: "All fields are required" });
         }
 
-        const feedback = await Feedback.create({
+        const newFeedback = await Feedback.create({
             user,
             rating,
-            msg,
+            feedback,
         });
 
         res.status(201).json({
             message: "Feedback send successfully",
-            feedback,
+            newFeedback,
         });
     } catch (error) {
         res.status(500).json({ message: "Server error", error: error.message });

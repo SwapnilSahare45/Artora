@@ -35,7 +35,7 @@ exports.getWishlist = async (req, res) => {
         const userId = req.user._id;
 
         // Fetch all wishlist items for the user
-        const wishlistItems = await Wishlist.find({ user: userId });
+        const wishlistItems = await Wishlist.find({ user: userId }).populate("artwork");
         if (!wishlistItems) {
             return res.status(404).json({ message: "Wishlist items not found" });
         }

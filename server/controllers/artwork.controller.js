@@ -132,12 +132,12 @@ exports.getArtworks = async (req, res) => {
 
     // Query and count
     const [artworks, total] = await Promise.all([
-      Artwork.find({ ...query, owner: { $ne: userId } })
+      Artwork.find({ ...query, owner: { $ne: userId }, sold: false })
         .populate("auctionId")
         .sort(sortBy)
         .skip(skip)
         .limit(Number(limit)),
-      Artwork.countDocuments({ ...query, owner: { $ne: userId } })
+      Artwork.countDocuments({ ...query, owner: { $ne: userId }, sold: false })
     ]);
 
     res.status(200).json({
