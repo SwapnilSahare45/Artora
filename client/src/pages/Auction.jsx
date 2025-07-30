@@ -1,7 +1,7 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ArtworkCard from "@/components/ArtworkCard";
-import AuctionFilter from "@/components/AuctionFilters";
+import Filter from "@/components/ArtFilters";
 import { useParams, Link } from "react-router-dom";
 import { useArtworkStore } from "../store/artworkStore";
 import { useAuctionStore } from "../store/auctionStore";
@@ -19,18 +19,17 @@ const Auction = () => {
   // States from artwork store
   const { getAuctionArtworks, artworks, isLoading: artworkLoading, error: artworkError } = useArtworkStore();
 
-  // Fetch auction and artwork when component mount or 
-  // when getAuction, getAuctionArtworks or id changes
+  // Fetch auction and artwork when component mount or id changes
   useEffect(() => {
     if (id) {
       getAuction(id);
       getAuctionArtworks(id);
     }
-  }, [id, getAuctionArtworks, getAuction]);
+  }, [id]);
 
-  // Show error
-  if (auctionError || artworkError) {
-    return <p>{auctionError || artworkError}</p>
+  // Handle filters
+  const handleFilterChange = (filters) => {
+    getAuctionArtworks(id, filters);
   }
 
   // Show an error when component mount or auctionError, artworkError changes
@@ -45,9 +44,9 @@ const Auction = () => {
       <Navbar />
 
       {/* Artwork section */}
-      <section className="pt-28 pb-12 px-4 md:px-8 lg:px-24">
-        <div className="mb-8 flex justify-between">
-          <div>
+      <section className="pt-20 pb-12 px-4 md:px-8 md:pt-28 lg:px-24">
+        <div className="mb-8 flex flex-col justify-between md:flex-row">
+          <div className="mb-4 md:mb-0">
             {
               !auctionLoading ? (
                 <h1 className="text-3xl font-semibold mb-2">
@@ -71,14 +70,17 @@ const Auction = () => {
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {/* Filter Sidebar */}
-          <aside className="sticky top-24 self-start h-1/3 lg:col-span-1">
-            <AuctionFilter />
+          <aside className="hidden sticky top-24 self-start h-1/3 md:flex lg:col-span-1">
+            <Filter
+              onFilterChange={handleFilterChange}
+              inAuction={true}
+            />
           </aside>
 
           {/* Artwork Grid */}
-          <div className="sticky top-24 self-start lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 xl:grid-cols-3 gap-6">
+          <div className="sticky top-24 self-start md:col-span-2 lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 xl:grid-cols-3 gap-6">
             {
               !artworkLoading ? (
                 artworks.map((artwork) => (

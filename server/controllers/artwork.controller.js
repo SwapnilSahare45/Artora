@@ -157,13 +157,41 @@ exports.getArtworkByAuction = async (req, res) => {
   try {
     const userId = req.user._id;
     const auctionId = req.params.id;
+    const { q, category, medium, style, orientation, size, sort = 'createdAt', order = 'desc', page = 1, limit = 12 } = req.query;
 
-    const artworks = await Artwork.find({ auctionId, owner: { $ne: userId } });
-    if (!artworks) {
-      return res.status(404).json({ message: "No artworks found" });
-    }
+    const query = {};
 
-    res.status(200).json({ artworks });
+    // If a search query is provided, use MongoDB text search
+    if (q) query.$text = { $search: q };
+
+    // Build filters
+    if (category) query.category = category;
+    if (medium) query.medium = medium;
+    if (style) query.style = style;
+    if (orientation) query.orientation = orientation;
+    if (size) query.size = size;
+
+    // Pagination
+    const skip = (Number(page) - 1) * Number(limit);
+    const sortBy = { [sort]: order === 'asc' ? 1 : -1 };
+
+    // Query and count
+    const [artworks, total] = await Promise.all([
+      Artwork.find({ auctionId, ...query, owner: { $ne: userId }, sold: false })
+        .sort(sortBy)
+        .skip(skip)
+        .limit(Number(limit)),
+      Artwork.countDocuments({ ...query, owner: { $ne: userId }, sold: false })
+    ]);
+
+    res.status(200).json({
+      artworks,
+      total,
+      page: Number(page),
+      limit: Number(limit),
+      totalPages: Math.ceil(total / limit),
+    });
+
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
   }

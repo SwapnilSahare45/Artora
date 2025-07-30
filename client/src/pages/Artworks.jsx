@@ -1,7 +1,7 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ArtworkCard from "@/components/ArtworkCard";
-import Filter from "@/components/ArtFilters"; // Make sure this path is correct
+import Filter from "@/components/ArtFilters";
 import { useArtworkStore } from "../store/artworkStore";
 import { useEffect } from "react";
 import ArtworkCardSkeleton from "../components/skeleton/ArtworkCardSkeleton";
@@ -12,10 +12,15 @@ const Artworks = () => {
   // States from artwork store
   const { getArtworks, artworks, isLoading, error } = useArtworkStore();
 
-  // Fetch the artworks when component mount or when getArtworks changes
+  // Fetch the artworks when component mount
   useEffect(() => {
     getArtworks();
-  }, [getArtworks]);
+  }, []);
+
+  // Handle filters
+  const handleFilterChange = (filters) => {
+    getArtworks(filters);
+  }
 
   // Show an error when component mount or when error changes
   useEffect(() => {
@@ -42,7 +47,9 @@ const Artworks = () => {
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           {/* Filter Sidebar */}
           <aside className="sticky top-24 self-start h-1/3 lg:col-span-1">
-            <Filter />
+            <Filter
+              onFilterChange={handleFilterChange}
+            />
           </aside>
 
           {/* Conditional redering for artworks */}

@@ -11,13 +11,15 @@ export const getMyArtworksService = async () => {
 };
 
 // Get artworks with provided query
-export const getArtworksService = async () => {
-    return await api.get("artworks");
+export const getArtworksService = async (params = {}) => {
+    const query = new URLSearchParams(params).toString();
+    return await api.get(`artworks?${query}`);
 };
 
 // Get the artworks from auction with provided auction id
-export const getAuctionArtworksService = async (id) => {
-    return await api.get(`artworks/auction/${id}`);
+export const getAuctionArtworksService = async (id, params = {}) => {
+    const query = new URLSearchParams(params).toString();
+    return await api.get(`artworks/auction/${id}?${query}`);
 };
 
 // Get artwork with provided id

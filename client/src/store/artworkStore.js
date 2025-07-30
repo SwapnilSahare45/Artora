@@ -32,10 +32,10 @@ export const useArtworkStore = create((set) => ({
     },
 
     // Get all artworks
-    getArtworks: async () => {
+    getArtworks: async (filters = {}) => {
         set({ isLoading: true });
         try {
-            const response = await getArtworksService();
+            const response = await getArtworksService(filters);
             set({ artworks: response.data.artworks, isLoading: false });
         } catch (error) {
             set({ error: error.response?.data?.message, isLoading: false });
@@ -43,10 +43,10 @@ export const useArtworkStore = create((set) => ({
     },
 
     // Get auction artworks
-    getAuctionArtworks: async (id) => {
+    getAuctionArtworks: async (id, filters = {}) => {
         set({ isLoading: true });
         try {
-            const response = await getAuctionArtworksService(id);
+            const response = await getAuctionArtworksService(id, filters);
             set({ artworks: response.data?.artworks, isLoading: false });
         } catch (error) {
             set({ error: error.response?.data?.message, isLoading: false });

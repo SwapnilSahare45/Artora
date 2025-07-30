@@ -26,9 +26,9 @@ const Footer = () => {
         </div>
 
         {/* Navigation */}
-        <div className="flex flex-col items-center">
+        <div className="flex flex-col md:items-center">
           <h3 className="text-base font-semibold mb-3">Explore</h3>
-          <ul className="space-y-2 text-sm">
+          <ul className="grid grid-cols-2 gap-2 space-y-2 text-sm md:grid-cols-1">
             <li><Link to="/" className="hover:text-primary">Home</Link></li>
             <li><Link to="/artworks" className="hover:text-primary">Artworks</Link></li>
             <li><Link to="/auctions" className="hover:text-primary">Auctions</Link></li>

@@ -227,14 +227,14 @@ const Navbar = () => {
         {/* Mobile toggle */}
         <button
           className="md:hidden text-gray-700 dark:text-gray-300"
-          onClick={() => setIsOpen(!open)}
+          onClick={() => setIsOpen(!isOpen)}
         >
-          {open ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
         </button>
       </div>
 
       {/* Mobile menu */}
-      {open && (
+      {isOpen && (
         <nav className="md:hidden bg-white dark:bg-gray-900 px-4 pb-4">
           {[...baseLinks, ...(isAuth ? [] : guestLinks)].map((l) => (
             <NavLink
