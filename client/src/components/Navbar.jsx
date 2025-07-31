@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
-import { Menu, X, Bell, Heart, MessageCircle, User, LogOut, ShoppingBag, Settings, } from "lucide-react";
+import { Menu, X, Bell, Heart, MessageCircle, UserPlus, User, LogOut, ShoppingBag, Settings, } from "lucide-react";
 import logo from "../assets/logo.png";
 import { useAuthStore } from "../store/authStore";
 
@@ -65,7 +65,6 @@ const Navbar = () => {
     { name: "Home", path: "/" },
     { name: "Artworks", path: "/artworks" },
     { name: "Auctions", path: "/auctions" },
-    { name: "Connect", path: "/connect" },
     { name: "Sell Artwork", path: "/add-artwork-direct" },
   ];
   const guestLinks = [
@@ -125,6 +124,17 @@ const Navbar = () => {
 
           {isAuth && (
             <>
+              <NavLink
+              to="/connect"
+                className={({ isActive }) =>
+                  `hover:text-primary ${isActive
+                    ? "text-primary"
+                    : "text-gray-700 dark:text-gray-300"
+                  }`
+                }
+              >
+                <UserPlus className="w-5 h-5" />
+              </NavLink>
               <NavLink
                 to="/wishlist"
                 className={({ isActive }) =>
