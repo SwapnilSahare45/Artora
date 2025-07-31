@@ -5,12 +5,14 @@ const express = require("express");
 const connectDB = require("./config/db");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
+
 const userRoutes = require("./routes/user.routes");
 const artworkRoutes = require("./routes/artwork.routes");
 const auctionRoutes = require("./routes/auction.routes");
 const orderRoutes = require("./routes/order.routes");
 const wishlistRoutes = require("./routes/wishlist.routes");
 const feedbackRoutes = require("./routes/feedback.routes");
+const notificationRoutes = require("./routes/notification.routes");
 
 // Connect to the database
 connectDB();
@@ -32,6 +34,7 @@ app.use("/api/artworks", artworkRoutes); // Artwork-related routes
 app.use("/api/auctions", auctionRoutes); // Auction-related routes
 app.use("/api/orders", orderRoutes); // Order-related routes
 app.use("/api/wishlist", wishlistRoutes); // Wishlist-related routes
+app.use("/api/notifications", notificationRoutes);
 app.use("/api/feedback", feedbackRoutes); // Feedback-related routes
 
 // Start the server and listen on the specified port

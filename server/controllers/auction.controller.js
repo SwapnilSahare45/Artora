@@ -1,4 +1,5 @@
 const Auction = require("../models/auction.model");
+const Notification = require("../models/notification.model");
 
 exports.createAuction = async (req, res) => {
     try {
@@ -10,6 +11,12 @@ exports.createAuction = async (req, res) => {
 
         // Create an auction
         const auction = await Auction.create({ title, startDate, endDate });
+
+        await Notification.create({
+            type: "auction",
+            title: `New '${auction.title}' is available. Start from ${endDate}`,
+            message: `New auction created: ${auction.title}`,
+        });
 
         res.status(201).json({ auction });
 
