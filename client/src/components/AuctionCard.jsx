@@ -25,13 +25,6 @@ const AuctionCard = ({ id, title, startDate, endDate }) => {
                         </Link>
                     )
             }
-
-             <Link
-                            to={`/auction/${id}`}
-                            className="inline-block bg-primary text-white px-4 py-2 rounded hover:bg-opacity-90 transition"
-                        >
-                            View Auction
-                        </Link>
         </div>
     )
 }
