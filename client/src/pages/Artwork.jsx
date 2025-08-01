@@ -8,6 +8,7 @@ import { getFormattedTimeLeft } from "../../utils/getFormattedTimeLeft";
 import ArtworkSkeleton from "../components/skeleton/ArtworkSkeleton";
 import { useWishlistStore } from "../store/wishlistStore";
 import { toast } from "react-toastify";
+import { useBidsStore } from "../store/bidsStore";
 
 const Artwork = () => {
 
@@ -78,17 +79,28 @@ const Artwork = () => {
       setIsInWishlist(prev => !prev);
       toast.error("Something went wrong.");
     } else {
-      toast.success(isInWishlist ? "Artwork remove from your wishlist." : "Artwork added to your wishlist.");
+      toast.success(
+        isInWishlist
+          ? "Artwork removed from your wishlist."
+          : "Artwork added to your wishlist."
+      );
     }
+  };
+
+  // States from bids store
+  const { placeBid, isLoading: bidLoading, error: bidError } = useBidsStore();
+
+  // functin to handle place bid
+  const handlePlaceBid = async (id) => {
+    await placeBid(id);
   }
 
   // Show an error when component mount or when artwork error or wishlist error changes
   useEffect(() => {
-    if (artworkError || wishlistError) {
-      toast.error(artworkError || wishlistError);
+    if (artworkError || wishlistError || bidError) {
+      toast.error(artworkError || wishlistError || bidError);
     }
-  }, [artworkError, wishlistError]);
-
+  }, [artworkError, wishlistError, bidError]);
 
   return (
     <main className="bg-gray-50 text-black dark:bg-gray-900 dark:text-white min-h-screen">
@@ -116,6 +128,7 @@ const Artwork = () => {
                 <img
                   src={previewImage || artwork?.images[0]}
                   alt={artwork?.title}
+                  loading="lazy"
                   className="w-full h-96 object-center rounded shadow"
                 />
 
@@ -125,6 +138,7 @@ const Artwork = () => {
                       key={index}
                       src={img}
                       alt={`Preview ${index + 1}`}
+                      loading="lazy"
                       className={`w-24 h-24 object-cover rounded shadow cursor-pointer ${img === previewImage ? 'ring-2 ring-primary' : ''}`}
                       onClick={() => setPreviewImage(img)}
                     />
@@ -212,8 +226,10 @@ const Artwork = () => {
 
                       <button
                         className="bg-primary text-white px-6 py-2 rounded hover:bg-opacity-90 transition"
+                        disabled={bidLoading}
+                        onClick={() => handlePlaceBid(artwork?._id)}
                       >
-                        Place Bid
+                        {bidLoading ? "Placing..." : "Place Bid"}
                       </button>
                     </>
                   )}

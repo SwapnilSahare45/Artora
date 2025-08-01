@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { addArtworkService, deleteArworkService, getArtworkService, getArtworksService, getAuctionArtworksService, getMyArtworksService, updateArtworkService } from "../services/artworkService";
+import { addArtworkService, deleteArworkService, getArtworkService, getArtworksService, getAuctionArtworksService, getMyArtworksService, getThreeArtworkService, updateArtworkService } from "../services/artworkService";
 
 // Create a zustand store for artwork
 export const useArtworkStore = create((set) => ({
@@ -7,6 +7,20 @@ export const useArtworkStore = create((set) => ({
     artwork: null, // Store the artwork object
     isLoading: false, // Indicates if an artwork request in process
     error: null, // Store error messages from artwork request
+    page: 1,
+    totalPages: 1,
+    limit: 12,
+
+    // Three random artworks
+    getThreeArtwork: async () => {
+        set({ isLoading: true });
+        try {
+            const response = await getThreeArtworkService();
+            set({ artworks: response.data, isLoading: false });
+        } catch (error) {
+            set({ error: error.response.data.message, isLoading: false });
+        }
+    },
 
     // Add artwork
     addArtwork: async (data) => {
@@ -35,8 +49,16 @@ export const useArtworkStore = create((set) => ({
     getArtworks: async (filters = {}) => {
         set({ isLoading: true });
         try {
-            const response = await getArtworksService(filters);
-            set({ artworks: response.data.artworks, isLoading: false });
+            const { page = 1, limit = 12, ...rest } = filters;
+            const params = { page, limit, ...rest };
+            const response = await getArtworksService(params);
+            set({
+                artworks: response.data.artworks,
+                page: response.data.page,
+                limit: response.data.limit,
+                totalPages: response.data.totalPages,
+                isLoading: false
+            });
         } catch (error) {
             set({ error: error.response?.data?.message, isLoading: false });
         }
@@ -47,11 +69,20 @@ export const useArtworkStore = create((set) => ({
         set({ isLoading: true });
         try {
             const response = await getAuctionArtworksService(id, filters);
-            set({ artworks: response.data?.artworks, isLoading: false });
+            set({
+                artworks: response.data?.artworks,
+                page: response.data.page,
+                limit: response.data.limit,
+                totalPages: response.data.totalPages,
+                isLoading: false
+            });
         } catch (error) {
             set({ error: error.response?.data?.message, isLoading: false });
         }
     },
+
+    // Set page 
+    setPage: (page) => set({ page }),
 
     // Get artwork
     getArtwork: async (id) => {

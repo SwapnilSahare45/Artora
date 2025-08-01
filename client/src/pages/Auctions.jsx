@@ -9,9 +9,6 @@ import { toast } from "react-toastify";
 
 const Auctions = () => {
 
-  // State to hold sort filter option
-  const [sortOption, setSortOption] = useState("start-desc");
-
   // States from auction store
   const { getAuctions, auctions, isLoading, error } = useAuctionStore();
 
@@ -37,28 +34,6 @@ const Auctions = () => {
           <h1 className="text-3xl font-semibold">
             Active Auctions
           </h1>
-
-          <div className="flex items-center gap-4">
-            {/* Date Sort Filter */}
-            <select
-              value={sortOption}
-              onChange={(e) => setSortOption(e.target.value)}
-              className="bg-white dark:bg-gray-800 border dark:border-gray-700 text-sm px-3 py-2 rounded"
-            >
-              <option value="start-desc">
-                Start Date ↓
-              </option>
-              <option value="start-asc">
-                Start Date ↑
-              </option>
-              <option value="end-desc">
-                End Date ↓
-              </option>
-              <option value="end-asc">
-                End Date ↑
-              </option>
-            </select>
-          </div>
         </div>
 
         {/* Conditional rendering for auctions */}

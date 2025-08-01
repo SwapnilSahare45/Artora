@@ -22,7 +22,8 @@ const NotificationIcon = ({ type }) => {
 
 const Notifications = () => {
 
-  const { getNotifications, notifications, isLoading, error } = useNotificationStore();
+  // States from notification store
+  const { getNotifications, notifications } = useNotificationStore();
 
   useEffect(() => {
     getNotifications();

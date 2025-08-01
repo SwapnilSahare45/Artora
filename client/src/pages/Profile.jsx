@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Link } from "react-router-dom";
-import { ShoppingBag, Heart, MessageCircle, Settings, Pencil, Save, X, Trash2, Edit, Upload } from "lucide-react";
+import { ShoppingBag, Heart, Bell, Settings, Pencil, Save, X, Trash2, Edit, Upload } from "lucide-react";
 import { useArtworkStore } from "../store/artworkStore";
 import { useAuthStore } from "../store/authStore";
 import ProfileSkeleton from "../components/skeleton/profileSkeleton";
@@ -101,7 +101,7 @@ const Profile = () => {
         {
           !profileLoading ? (
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 bg-white dark:bg-gray-800 p-6 rounded-lg shadow mb-8">
-              <div className="flex items-start sm:items-center gap-6">
+              <div className="flex flex-col items-center sm:items-center gap-6 md:flex-row md:items-start">
                 <div className="relative">
 
                   {/* User avatar */}
@@ -209,6 +209,13 @@ const Profile = () => {
         {/* Quick Access */}
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6 mb-12">
           <Link
+            to="/notifications"
+            className="quick-link"
+          >
+            <Bell className="w-6 h-6 mb-2" />
+            Notifications
+          </Link>
+          <Link
             to="/orders"
             className="quick-link"
           >
@@ -221,13 +228,6 @@ const Profile = () => {
           >
             <Heart className="w-6 h-6 mb-2" />
             Wishlist
-          </Link>
-          <Link
-            to="/messages"
-            className="quick-link"
-          >
-            <MessageCircle className="w-6 h-6 mb-2" />
-            Messages
           </Link>
           <Link
             to="/settings"

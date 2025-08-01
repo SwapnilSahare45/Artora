@@ -1,5 +1,4 @@
 import logo from '../assets/logo.png';
-import googleIcon from '../assets/google-logo.svg';
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { useAuthStore } from '../store/authStore';
@@ -116,16 +115,6 @@ const Register = () => {
           >
             {isLoading ? "Registering..." : "Register"}
           </button>
-        </div>
-
-        {/* Sign up with Google */}
-        <div className="mt-6 flex items-center gap-3 bg-white text-black px-4 py-2 rounded shadow cursor-pointer hover:bg-gray-100 transition">
-          <img
-            src={googleIcon}
-            alt="Google"
-            className="w-5 h-5"
-          />
-          <span className="text-sm font-medium">Sign up with Google</span>
         </div>
 
         {/* Login link */}

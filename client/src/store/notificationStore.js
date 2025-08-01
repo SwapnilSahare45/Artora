@@ -6,11 +6,12 @@ export const useNotificationStore = create((set) => ({
     isLoading: false,
     error: null,
 
+    // get notifications
     getNotifications: async () => {
         set({ isLoading: true });
         try {
             const response = await getNotificationsService();
-            set({ notifications: response.data?.notification, isLoading: false });
+            set({ notifications: response.data?.notifications, isLoading: false });
         } catch (error) {
             set({ error: error.response?.data?.message, isLoading: false });
         }

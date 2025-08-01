@@ -16,20 +16,22 @@ const Auction = () => {
 
   // States from auction store
   const { getAuction, auction, isLoading: auctionLoading, error: auctionError } = useAuctionStore();
+
   // States from artwork store
-  const { getAuctionArtworks, artworks, isLoading: artworkLoading, error: artworkError } = useArtworkStore();
+  const { getAuctionArtworks, artworks, isLoading: artworkLoading, error: artworkError, page, totalPages, setPage } = useArtworkStore();
 
   // Fetch auction and artwork when component mount or id changes
   useEffect(() => {
     if (id) {
       getAuction(id);
-      getAuctionArtworks(id);
+      getAuctionArtworks(id, { page });
     }
-  }, [id]);
+  }, [id, page]);
 
   // Handle filters
   const handleFilterChange = (filters) => {
-    getAuctionArtworks(id, filters);
+    setPage(1);
+    getAuctionArtworks(id, { ...filters, page: 1 });
   }
 
   // Show an error when component mount or auctionError, artworkError changes
@@ -38,6 +40,41 @@ const Auction = () => {
       toast.error(auctionError || artworkError);
     }
   }, [auctionError, artworkError]);
+
+  // pegination component
+  const renderPagination = () => {
+    const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
+    return (
+      <div className="flex flex-wrap justify-center items-center gap-2 mt-10">
+        <button
+          onClick={() => page > 1 && setPage(page - 1)}
+          disabled={page === 1}
+          className="px-3 py-1 rounded-md bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 disabled:opacity-50"
+        >
+          Previous
+        </button>
+        {pages.map((p) => (
+          <button
+            key={p}
+            onClick={() => setPage(p)}
+            className={`px-3 py-1 rounded-md ${page === p
+              ? "bg-blue-600 text-white"
+              : "bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200"
+              } hover:bg-blue-500 hover:text-white transition`}
+          >
+            {p}
+          </button>
+        ))}
+        <button
+          onClick={() => page < totalPages && setPage(page + 1)}
+          disabled={page === totalPages}
+          className="px-3 py-1 rounded-md bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 disabled:opacity-50"
+        >
+          Next
+        </button>
+      </div>
+    );
+  };
 
   return (
     <main className="bg-gray-50 text-black dark:bg-gray-900 dark:text-white min-h-screen">
@@ -72,7 +109,7 @@ const Auction = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {/* Filter Sidebar */}
-          <aside className="hidden sticky top-24 self-start h-1/3 md:flex lg:col-span-1">
+          <aside className="hidden sticky top-24 self-start  md:flex lg:col-span-1">
             <Filter
               onFilterChange={handleFilterChange}
               inAuction={true}
@@ -89,8 +126,7 @@ const Auction = () => {
                     image={artwork.thumbnail}
                     title={artwork.title}
                     artist={artwork.artist}
-                    amount={artwork.openingBid}
-                    timeLeft={auction?.endDate}
+                    amount={artwork.currnetBid === 0 ? artwork.openingBid : artwork.currnetBid}
                     to={`/artwork/${artwork._id}`}
                   />
                 ))
@@ -107,6 +143,9 @@ const Auction = () => {
             }
           </div>
         </div>
+
+        {/* Pagination */}
+        {totalPages > 1 && renderPagination()}
       </section>
 
       <Footer />

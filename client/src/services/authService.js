@@ -34,3 +34,8 @@ export const getUsersService = async () => {
 export const getUserProfileService = async (id) => {
     return await api.get(`/auth/profile/${id}`);
 };
+
+// Logout
+export const logoutService = ()=>{
+    return api.post("auth/logout");
+}

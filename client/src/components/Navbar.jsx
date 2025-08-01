@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { Link, NavLink, useLocation } from "react-router-dom";
-import { Menu, X, Bell, Heart, MessageCircle, UserPlus, User, LogOut, ShoppingBag, Settings, } from "lucide-react";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
+import { Menu, X, Bell, Heart, User, LogOut, ShoppingBag, Settings, } from "lucide-react";
 import logo from "../assets/logo.png";
 import { useAuthStore } from "../store/authStore";
 
@@ -10,6 +10,7 @@ const Navbar = () => {
   const [mounted, setMounted] = useState(false);
   const [theme, setTheme] = useState(() => localStorage.getItem("theme") || "system");
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const navigate = useNavigate();
 
   // set the value when component mount or location changes
   useEffect(() => {
@@ -52,7 +53,7 @@ const Navbar = () => {
 
   /* ─── Auth placeholder ──────────────────────── */
   // States from auth store
-  const { profile, user } = useAuthStore();
+  const { profile, user, logout } = useAuthStore();
 
   // Fetch the profile when component mount or profile channges
   useEffect(() => {
@@ -71,6 +72,15 @@ const Navbar = () => {
     { name: "Login", path: "/login" },
     { name: "Register", path: "/register" },
   ];
+
+  const extraPaths = ["/wishlist", "/notifications", "/profile", "/orders", "/settings"];
+
+  const handleLogout = () => {
+    const success = logout();
+    if (success) {
+      navigate("/login");
+    }
+  }
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 bg-white dark:bg-gray-900 border-b dark:border-gray-700 border-gray-200">
@@ -91,20 +101,21 @@ const Navbar = () => {
 
         {/* Desktop nav */}
         <nav className="hidden md:flex items-center gap-6">
-          {baseLinks.map((l) => (
-            <NavLink
-              key={l.name}
-              to={l.path}
-              className={({ isActive }) =>
-                `text-sm font-medium hover:text-primary ${isActive
-                  ? "text-primary"
-                  : "text-gray-700 dark:text-gray-300"
-                }`
-              }
-            >
-              {l.name}
-            </NavLink>
-          ))}
+          {isAuth &&
+            baseLinks.map((l) => (
+              <NavLink
+                key={l.name}
+                to={l.path}
+                className={({ isActive }) =>
+                  `text-sm font-medium hover:text-primary ${isActive
+                    ? "text-primary"
+                    : "text-gray-700 dark:text-gray-300"
+                  }`
+                }
+              >
+                {l.name}
+              </NavLink>
+            ))}
 
           {!isAuth &&
             guestLinks.map((l) => (
@@ -125,17 +136,6 @@ const Navbar = () => {
           {isAuth && (
             <>
               <NavLink
-              to="/connect"
-                className={({ isActive }) =>
-                  `hover:text-primary ${isActive
-                    ? "text-primary"
-                    : "text-gray-700 dark:text-gray-300"
-                  }`
-                }
-              >
-                <UserPlus className="w-5 h-5" />
-              </NavLink>
-              <NavLink
                 to="/wishlist"
                 className={({ isActive }) =>
                   `hover:text-primary ${isActive
@@ -145,17 +145,6 @@ const Navbar = () => {
                 }
               >
                 <Heart className="w-5 h-5" />
-              </NavLink>
-              <NavLink
-                to="/messages"
-                className={({ isActive }) =>
-                  `hover:text-primary ${isActive
-                    ? "text-primary"
-                    : "text-gray-700 dark:text-gray-300"
-                  }`
-                }
-              >
-                <MessageCircle className="w-5 h-5" />
               </NavLink>
               <NavLink
                 to="/notifications"
@@ -196,7 +185,7 @@ const Navbar = () => {
                     <Settings className="w-4 h-4" /> Settings
                   </Link>
                   <button
-                    onClick={() => {/* logout */ }}
+                    onClick={handleLogout}
                     className="w-full flex items-center gap-2 px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700"
                   >
                     <LogOut className="w-4 h-4" /> Logout
@@ -246,7 +235,7 @@ const Navbar = () => {
       {/* Mobile menu */}
       {isOpen && (
         <nav className="md:hidden bg-white dark:bg-gray-900 px-4 pb-4">
-          {[...baseLinks, ...(isAuth ? [] : guestLinks)].map((l) => (
+          {!isAuth && guestLinks.map((l) => (
             <NavLink
               key={l.name}
               to={l.path}
@@ -264,23 +253,19 @@ const Navbar = () => {
 
           {isAuth && (
             <>
-              {["/wishlist", "/messages", "/notifications", "/profile", "/orders", "/settings"].map(
-                (p) => (
-                  <NavLink
-                    key={p}
-                    to={p}
-                    onClick={() => setIsOpen(false)}
-                    className="block py-2 font-medium text-gray-700 dark:text-gray-300"
-                  >
-                    {p.replace("/", "").charAt(0).toUpperCase() + p.slice(2)}
-                  </NavLink>
-                )
+              {[...baseLinks.map(link => link.path), ...extraPaths].map((p) => (
+                <NavLink
+                  key={p}
+                  to={p}
+                  onClick={() => setIsOpen(false)}
+                  className="block py-2 font-medium text-gray-700 dark:text-gray-300"
+                >
+                  {p.replace("/", "").charAt(0).toUpperCase() + p.slice(2)}
+                </NavLink>
+              )
               )}
               <button
-                onClick={() => {
-                  setIsOpen(false);
-                  /* logout */
-                }}
+                onClick={handleLogout}
                 className="block w-full text-left py-2 font-medium text-gray-700 dark:text-gray-300"
               >
                 Logout

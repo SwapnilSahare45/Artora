@@ -1,5 +1,10 @@
 import { api } from "./api";
 
+// Get the three random artworks
+export const getThreeArtworkService = async () => {
+    return await api.get("artworks/random");
+};
+
 // Add artwork
 export const addArtworkService = async (data) => {
     return await api.post("artworks", data);

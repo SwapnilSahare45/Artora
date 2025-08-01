@@ -19,13 +19,13 @@ const Settings = () => {
     profile();
   }, [profile]);
 
+  // State to hold user data(name, bio)
+  const [updateUser, setUpdateUser] = useState(user);
+
   // Set user to updateProfile state when component mount or user changes
   useEffect(() => {
     if (user) setUpdateUser(user);
   }, [user]);
-
-  // State to hold user data(name, bio)
-  const [updateUser, setUpdateUser] = useState({ name: '', bio: '' });
 
   // State to hold avatarFile
   const [avatarFile, setAvatarFile] = useState(null);
@@ -47,8 +47,8 @@ const Settings = () => {
     // Append edit data
     const data = new FormData();
     data.append('avatar', avatarFile);
-    data.append('name', user.name);
-    data.append('bio', user.bio);
+    data.append('name', updateUser.name);
+    data.append('bio', updateUser.bio);
 
     const success = await updateProfile(data);
     // When profile update successfully then show an success message and
@@ -60,7 +60,7 @@ const Settings = () => {
 
   // Show an error when component mount or error changes
   useEffect(() => {
-    if(error){
+    if (error) {
       toast.error(error);
     }
   }, [error]);
@@ -122,8 +122,8 @@ const Settings = () => {
                 type="text"
                 placeholder="Username"
                 className="w-full p-3 rounded border dark:border-gray-600 bg-white dark:bg-gray-800"
-                value={updateUser.name}
-                onChange={(e) => setUser({ ...updateUser, name: e.target.value })}
+                value={updateUser?.name}
+                onChange={(e) => setUpdateUser({ ...updateUser, name: e.target.value })}
               />
 
               {/* Bio Input */}
@@ -131,8 +131,8 @@ const Settings = () => {
                 placeholder="Write a short bio..."
                 rows={4}
                 className="w-full p-3 rounded border dark:border-gray-600 bg-white dark:bg-gray-800"
-                value={updateUser.bio}
-                onChange={(e) => setUser({ ...updateUser, bio: e.target.value })}
+                value={updateUser?.bio}
+                onChange={(e) => setUpdateUser  ({ ...updateUser, bio: e.target.value })}
               />
 
               {/* Save Button */}

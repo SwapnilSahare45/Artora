@@ -21,7 +21,7 @@ const ArtworkCard = ({ image, title, artist, amount, timeLeft, to = "#" }) => {
   return (
     <Link
       to={to}
-      className="block rounded-lg overflow-hidden shadow hover:shadow-lg transition bg-white text-black dark:bg-gray-800 dark:text-white relative"
+      className="block rounded-lg overflow-hidden shadow hover:shadow-lg transition bg-white text-black dark:bg-gray-800 dark:text-white relative self-start"
     >
       <img
         src={image}

@@ -18,7 +18,7 @@ const WishlistCard = ({ item, removeHandler }) => {
                     by {item.artwork?.artist}
                 </p>
                 <p className="mt-2 text-primary font-bold">
-                    ₹ {item.artwork?.inAuction ? item.artwork?.currnetBid : item.artwork?.price}
+                    ₹ {item.artwork?.inAuction ? (item.artwork?.currnetBid === 0 ? item.artwork?.openingBid : item.artwork?.currnetBid) : item.artwork?.price}
                 </p>
 
                 <div className="flex justify-between items-center mt-4">

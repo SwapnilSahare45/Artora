@@ -32,7 +32,6 @@ const Footer = () => {
             <li><Link to="/" className="hover:text-primary">Home</Link></li>
             <li><Link to="/artworks" className="hover:text-primary">Artworks</Link></li>
             <li><Link to="/auctions" className="hover:text-primary">Auctions</Link></li>
-            <li><Link to="/connect" className="hover:text-primary">Connect</Link></li>
             <li><Link to="/feedback" className="hover:text-primary">Feedback</Link></li>
           </ul>
         </div>
@@ -61,7 +60,7 @@ const Footer = () => {
           <h3 className="text-base font-semibold mb-3">Connect With Me</h3>
           <div className="flex items-center gap-4">
             <a
-              href="#"
+              href="https://www.linkedin.com/in/swapnil-sahare-06a803318/"
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-primary"
@@ -70,7 +69,7 @@ const Footer = () => {
               <Linkedin className="w-5 h-5" />
             </a>
             <a
-              href="#"
+              href="https://github.com/SwapnilSahare45"
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-primary"
@@ -82,7 +81,7 @@ const Footer = () => {
         </div>
       </div>
 
-      {/* Bottom strip */}
+      {/* Bottom */}
       <div className="border-t border-gray-200 dark:border-gray-700 mt-6">
         <div className="max-w-7xl mx-auto px-4 py-4 text-center text-sm text-gray-500 dark:text-gray-400">
           © {new Date().getFullYear()} Artora. All rights reserved.
