@@ -1,11 +1,12 @@
 const Order = require("../models/order.model");
 const Artwork = require("../models/artwork.model");
 const Payment = require("../models/payment.model");
+const Notification = require("../models/notification.model");
 
 // Place order
 exports.placeOrder = async (req, res) => {
   try {
-    const buyerId = req.user._id;
+    const buyerId = req.user?._id;
     const {
       artwork,
       quantity = 1,
@@ -16,32 +17,36 @@ exports.placeOrder = async (req, res) => {
 
     // Validate required fields
     const requiredFields = ["fullName", "phone", "address", "city", "pinCode"];
-    const missing = requiredFields.find(field => !shippingAddress?.[field]);
+    const missing = requiredFields.find((field) => !shippingAddress?.[field]);
     if (!artwork || missing) {
       return res.status(400).json({ message: "Artwork and complete shipping address are required." });
     }
 
-    // Fetch artwork and validate ownership/sale
-    const art = await Artwork.findById(artwork).populate("owner");
-    if (!art) return res.status(404).json({ message: "Artwork not found." });
+    // Fetch the artwork and populate owner
+    const art = await Artwork.findById(artwork).populate("owner", "_id");
+    if (!art) {
+      return res.status(404).json({ message: "Artwork not found." });
+    }
 
-    if (art.sold) return res.status(400).json({ message: `Artwork '${art.title}' is already sold.` });
-
+    // Prevent buyer from purchasing their own artwork
     if (art.owner._id.toString() === buyerId.toString()) {
       return res.status(400).json({ message: "You cannot buy your own artwork." });
     }
 
-    // Determine price
-    let price = art.price;
+    // Block manual orders for auctioned artworks
     if (art.inAuction) {
-      const highestBid = art.bids?.[art.bids.length - 1];
-      if (!highestBid || highestBid.bidder.toString() !== buyerId.toString()) {
-        return res.status(403).json({ message: `You are not the highest bidder for '${art.title}'.` });
-      }
-      price = highestBid.amount;
+      return res.status(403).json({
+        message: "This artwork is part of an auction. You cannot place a direct order.",
+      });
     }
 
-    const totalArtworkPrice = price * quantity;
+    // Check if already sold
+    if (art.sold) {
+      return res.status(400).json({ message: `Artwork '${art.title}' is already sold.` });
+    }
+
+    // Price calculation
+    const totalArtworkPrice = art.price * quantity;
     const shippingFee = totalArtworkPrice >= 499 ? 0 : 40;
     const totalAmount = totalArtworkPrice + shippingFee;
 
@@ -49,7 +54,7 @@ exports.placeOrder = async (req, res) => {
     art.sold = true;
     await art.save();
 
-    // Handle payment
+    // Create a payment record if not COD
     let paymentInfo = null;
     if (paymentMethod !== "cod") {
       const payment = await Payment.create({
@@ -60,7 +65,7 @@ exports.placeOrder = async (req, res) => {
       paymentInfo = payment._id;
     }
 
-    // Create order
+    // Create the order
     const order = await Order.create({
       user: buyerId,
       artwork: art._id,
@@ -71,6 +76,21 @@ exports.placeOrder = async (req, res) => {
       paymentMethod,
       paymentInfo,
       isPaid: false,
+    });
+
+    // Send notifications
+    await Notification.create({
+      user: buyerId,
+      type: "order",
+      title: "Order Placed",
+      message: `Your order for '${art.title}' has been placed successfully.`,
+    });
+
+    await Notification.create({
+      user: art.owner._id,
+      type: "order",
+      title: "Artwork Sold",
+      message: `Your artwork '${art.title}' has been sold for ₹${totalAmount}.`,
     });
 
     return res.status(201).json({

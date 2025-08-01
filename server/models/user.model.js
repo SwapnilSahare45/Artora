@@ -8,9 +8,7 @@ const userSchema = new mongoose.Schema({
     },
     email: {
         type: String,
-        required: function () {
-            return !this.googleId;
-        },
+        required: true,
         lowercase: true,
         trim: true,
         unique: true,
@@ -18,17 +16,12 @@ const userSchema = new mongoose.Schema({
     },
     password: {
         type: String,
-        required: function () {
-            return !this.googleId;
-        },
+        required: true,
     },
-    googleId: {
+    role: {
         type: String,
-        required: function () {
-            return !this.password;
-        },
-        unique: true,
-        sparse: true,
+        enum: ["admin", "collector", "artist"],
+        default: "collector",
     },
     isVerified: {
         type: Boolean,
@@ -37,11 +30,11 @@ const userSchema = new mongoose.Schema({
     },
     avatar: {
         type: String,
-        default:"https://res.cloudinary.com/drknlre9y/image/upload/v1753180352/artora-artwork-thumbnail/rcogwgtamntcq75l6acd.png",
-        required:true,
+        default: "https://res.cloudinary.com/drknlre9y/image/upload/v1753180352/artora-artwork-thumbnail/rcogwgtamntcq75l6acd.png",
+        required: true,
     },
-    bio:{
-        type:String,
+    bio: {
+        type: String,
     }
 },
     {

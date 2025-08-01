@@ -1,6 +1,22 @@
 const Artwork = require("../models/artwork.model");
 const Bid = require("../models/bid.model");
+const Notification = require("../models/notification.model");
 const cloudinary = require("../util/cloudinary.config");
+
+exports.getThreeArtwork = async (req, res) => {
+  try {
+    // Fetch all artworks
+    const allArtworks = await Artwork.find().populate("auctionId");
+
+    // Randomly pick 3
+    const shuffled = allArtworks.sort(() => 0.5 - Math.random());
+    const randomThree = shuffled.slice(0, 3);
+
+    res.status(200).json(randomThree);
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
 
 exports.addArtwork = async (req, res) => {
   try {
@@ -93,6 +109,7 @@ exports.getMyArtworks = async (req, res) => {
   try {
     const userId = req.user._id;
 
+    // Get logged-in user artworks
     const artworks = await Artwork.find({ owner: userId });
     if (!artworks) return res.status(404).json({ message: "No artworks found" });
 
@@ -132,12 +149,11 @@ exports.getArtworks = async (req, res) => {
 
     // Query and count
     const [artworks, total] = await Promise.all([
-      Artwork.find({ ...query, owner: { $ne: userId }, sold: false })
-        .populate("auctionId")
+      Artwork.find({ ...query, owner: { $ne: userId }, inAuction: false, sold: false })
         .sort(sortBy)
         .skip(skip)
         .limit(Number(limit)),
-      Artwork.countDocuments({ ...query, owner: { $ne: userId }, sold: false })
+      Artwork.countDocuments({ ...query, owner: { $ne: userId }, inAuction: false, sold: false })
     ]);
 
     res.status(200).json({
@@ -181,7 +197,7 @@ exports.getArtworkByAuction = async (req, res) => {
         .sort(sortBy)
         .skip(skip)
         .limit(Number(limit)),
-      Artwork.countDocuments({ ...query, owner: { $ne: userId }, sold: false })
+      Artwork.countDocuments({ auctionId, ...query, owner: { $ne: userId }, sold: false })
     ]);
 
     res.status(200).json({
@@ -312,39 +328,63 @@ exports.deleteArtwork = async (req, res) => {
 
 exports.placeBid = async (req, res) => {
   try {
-    const { amount } = req.body;
     const artworkId = req.params.id;
     const userId = req.user.id;
 
-    if (!amount || amount <= 0) {
-      return res.status(400).json({ message: "Invalid bid amount" });
-    }
-
     // Find the artwork
-    const artwork = await Artwork.findById(artworkId);
+    const artwork = await Artwork.findById(artworkId).populate("owner", "_id");
     if (!artwork || !artwork.inAuction) {
       return res.status(404).json({ message: "Artwork not found or not in auction" });
     }
 
-    if (artwork.owner.toString() === userId) {
+    if (artwork?.owner.toString() === userId) {
       return res.status(404).json({ message: "Not authorized to bid this artwork" });
     }
 
-    // Check if bid is higher than currnetBid or openingBid
-    const minBid = artwork.currnetBid || artwork.openingBid;
-    if (amount <= minBid) {
-      return res.status(400).json({ message: `Bid must be greater then ${minBid}` });
+    const lastBid = await Bid.findOne({ artwork: artworkId }).sort({ createdAt: -1 });
+    if (lastBid && lastBid?.bidder.toString() === userId) {
+      return res.status(403).json({ message: "You already placed the last bid" });
+    }
+
+    // set the current bid ammount
+    if (artwork.currnetBid === 0) {
+      artwork.currnetBid = artwork.openingBid;
+    } else if (artwork.currnetBid < 500) {
+      artwork.currnetBid += 20;
+    } else if (artwork.currnetBid >= 500 && artwork.currnetBid < 1000) {
+      artwork.currnetBid += 50;
+    } else if (artwork.currnetBid >= 1000 && artwork.currnetBid < 5000) {
+      artwork.currnetBid += 100;
+    } else if (artwork.currnetBid >= 5000 && artwork.currnetBid < 10000) {
+      artwork.currnetBid += 500;
+    } else if (artwork.currnetBid >= 10000 && artwork.currnetBid < 50000) {
+      artwork.currnetBid += 1000;
+    } else {
+      artwork.currnetBid += 5000;
     }
 
     // Create a new bid
     const bid = await Bid.create({
       bidder: userId,
       artwork: artworkId,
-      amount,
+      amount: artwork.currnetBid,
     });
 
-    // Update artwork's current bid
-    artwork.currnetBid = amount;
+    await Notification.create({
+      user: userId,
+      type: "bid",
+      title: "Bid placed",
+      message: `Your bid of ₹${artwork.currnetBid} for artwork "${artwork.title}" was placed successfully.`
+    });
+
+    await Notification.create({
+      user: artwork.owner._id,
+      type: "bid",
+      title: "New bid",
+      message: `₹${artwork.currnetBid} bid was placed on your artwork "${artwork.title}".`
+    });
+
+    // update the currnetBid and save the artwork
     await artwork.save();
 
     res.status(201).json({

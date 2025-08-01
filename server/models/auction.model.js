@@ -28,6 +28,10 @@ const auctionSchema = new mongoose.Schema({
             message: "Auction end date must be after the start date",
         }
     },
+    ended: {
+        type: Boolean,
+        default: false,
+    }
 },
     {
         timestamps: true,

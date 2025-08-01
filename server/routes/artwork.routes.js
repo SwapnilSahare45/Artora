@@ -1,9 +1,11 @@
 const express = require("express");
 const upload = require("../util/multer.config");
-const { addArtwork, getArtworks, getArtworkById, updateArtwork, deleteArtwork, placeBid, getArtworkByAuction, getMyArtworks, getBids } = require("../controllers/artwork.controller");
+const { addArtwork, getArtworks, getArtworkById, updateArtwork, deleteArtwork, placeBid, getArtworkByAuction, getMyArtworks, getBids, getThreeArtwork } = require("../controllers/artwork.controller");
 const protect = require("../middleware/protect.middleware");
 
 const router = express.Router();
+
+router.get("/random", getThreeArtwork);
 
 // Route to add a new artwork with file uploads (thumbnail and images)
 router.post("/", protect, upload.fields([{ name: 'thumbnail', maxCount: 1 }, { name: 'images', maxCount: 8 }]), addArtwork);

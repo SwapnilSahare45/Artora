@@ -126,6 +126,7 @@ exports.login = async (req, res) => {
 
 exports.getMe = async (req, res) => {
     try {
+        // get user data from middleware directly
         res.status(200).json(req.user);
     } catch (error) {
         res.status(500).json({ message: "Server error", error: error.message });
@@ -178,32 +179,13 @@ exports.updateMe = async (req, res) => {
     }
 }
 
-exports.getUsers = async (req, res) => {
-    try {
-        const myId = req.user._id;
+exports.logout = (req, res) => {
+    // clear cookie when user logout
+    res.clearCookie('token', {
+        httpOnly: true,
+        sameSite: 'Lax',
+        secure: process.env.NODE_ENV === 'production',
+    });
 
-        const users = await User.find({ _id: { $ne: myId } });
-        if (!users) return res.status(404).json({ message: "No users found." });
-
-        res.status(200).json({ users })
-    } catch (error) {
-        res.status(500).json({ message: "Server error", error: error.message });
-    }
-}
-
-exports.getProfile = async (req, res) => {
-    try {
-        const { id } = req.params;
-
-        // Find user by ID and exclude password field from the result
-        const user = await User.findById(id).select("-password");
-
-        if (!user) {
-            return res.status(404).json({ message: "No user found" });
-        }
-
-        res.status(200).json({ user });
-    } catch (error) {
-        res.status(500).json({ message: "Server error", error: error.message });
-    }
-}
+    res.status(200).json({ message: "Logged out successfully" });
+};
