@@ -91,9 +91,14 @@ export const useAuthStore = create((set) => ({
     },
 
     // logout
-    logout: () => {
-        logoutService();
-        set({ user: null, isAuthenticated: false });
-        return { success: true };
-    },
+    logout: async () => {
+        try {
+            await logoutService(); 
+            set({ user: null, isAuthenticated: false });
+            return { success: true };
+        } catch (error) {
+            set({ error: error.response?.data?.message });
+            return { success: false };
+        }
+    }
 }));

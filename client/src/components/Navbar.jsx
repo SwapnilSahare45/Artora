@@ -75,8 +75,8 @@ const Navbar = () => {
 
   const extraPaths = ["/wishlist", "/notifications", "/profile", "/orders", "/settings"];
 
-  const handleLogout = () => {
-    const success = logout();
+  const handleLogout = async () => {
+    const success = await logout();
     if (success) {
       navigate("/login");
     }

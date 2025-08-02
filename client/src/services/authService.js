@@ -36,6 +36,6 @@ export const getUserProfileService = async (id) => {
 };
 
 // Logout
-export const logoutService = ()=>{
-    return api.post("auth/logout");
+export const logoutService = async () => {
+    return await api.post("auth/logout");
 }
