@@ -179,7 +179,7 @@ exports.updateMe = async (req, res) => {
     }
 }
 
-exports.logout = (req, res) => {
+exports.logout = async (req, res) => {
     // clear cookie when user logout
     res.clearCookie('token', {
         httpOnly: true,
