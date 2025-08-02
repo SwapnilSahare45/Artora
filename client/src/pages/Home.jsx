@@ -94,9 +94,9 @@ const Home = () => {
             feedbacks.map((feedback) => (
               <TestimonialCard
                 key={feedback._id}
-                name={feedback.user?.name}
-                role={feedback.user?.role}
-                image={feedback.user?.avatar}
+                name={feedback?.user?.name}
+                role={feedback?.user?.role}
+                image={feedback?.user?.avatar}
                 quote={feedback?.feedback}
               />
             ))}
