@@ -5,7 +5,7 @@ import { getUserProfileService, getUsersService, loginUserService, logoutService
 export const useAuthStore = create((set) => ({
     users: [], // Store users array from auth request
     user: null, // Stores the authenticated user object
-    isAuthenticated: true,
+    isAuthenticated: false,
     isLoading: false, // Indicates if an auth request is in progress
     error: null, // Stores error messages from auth requests
 

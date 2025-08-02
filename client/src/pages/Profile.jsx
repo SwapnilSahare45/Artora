@@ -87,7 +87,7 @@ const Profile = () => {
   // Show an error when component mount or profileError or artworkError changes
   useEffect(() => {
     if (profileError || artworkError) {
-      toast.error(error);
+      toast.error(profileError || artworkError);
     }
   }, [profileError, artworkError]);
 

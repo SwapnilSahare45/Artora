@@ -14,7 +14,7 @@ exports.createAuction = async (req, res) => {
 
         await Notification.create({
             type: "auction",
-            title: `New '${auction.title}' is available. Start from ${endDate}`,
+            title: `New '${auction.title}' is available. Start from ${new Date(startDate).toDateString()}`,
             message: `New auction created: ${auction.title}`,
         });
 
