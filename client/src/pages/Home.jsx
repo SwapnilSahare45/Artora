@@ -24,8 +24,6 @@ const Home = () => {
     getThreeFeedback();
   }, [profile, getThreeArtwork, getThreeFeedback]);
 
-  console.log(feedbacks)
-
   return (
     <main className='bg-gray-50 text-black dark:bg-gray-900 dark:text-white'>
       <Navbar />
@@ -89,21 +87,25 @@ const Home = () => {
       </section>
 
       {/* Testimonials */}
-      <section className='pb-12'>
-        <h3 className='text-4xl font-semibold mb-8 text-center'>What Our Users Say</h3>
-        <div className='grid grid-cols-1 gap-4 px-4 md:grid-cols-3 md:px-8 lg:px-24'>
-          {feedbacks && feedbacks.user &&
-            feedbacks.map((feedback) => (
-              <TestimonialCard
-                key={feedback._id}
-                name={feedback?.user.name}
-                role={feedback?.user.role}
-                image={feedback?.user.avatar}
-                quote={feedback?.feedback}
-              />
-            ))}
-        </div>
-      </section>
+      {
+        feedbacks && (
+          <section className='pb-12'>
+            <h3 className='text-4xl font-semibold mb-8 text-center'>What Our Users Say</h3>
+            <div className='grid grid-cols-1 gap-4 px-4 md:grid-cols-3 md:px-8 lg:px-24'>
+              {
+                feedbacks.map((feedback) => (
+                  <TestimonialCard
+                    key={feedback._id}
+                    name={feedback?.user.name}
+                    role={feedback?.user.role}
+                    image={feedback?.user.avatar}
+                    quote={feedback?.feedback}
+                  />
+                ))}
+            </div>
+          </section>
+        )
+      }
 
       <Footer />
     </main>
