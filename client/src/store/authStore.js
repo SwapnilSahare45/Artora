@@ -50,7 +50,7 @@ export const useAuthStore = create((set) => ({
     profile: async () => {
         try {
             const response = await profileService();
-            set({ user: response.data, isAuthenticated: true, isLoading: false });
+            set({ user: response?.data, isAuthenticated: true, isLoading: false });
         } catch (error) {
             set({ error: error.response?.data?.message, isLoading: false });
         }
