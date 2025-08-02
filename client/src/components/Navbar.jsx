@@ -68,12 +68,19 @@ const Navbar = () => {
     { name: "Auctions", path: "/auctions" },
     { name: "Sell Artwork", path: "/add-artwork-direct" },
   ];
+
   const guestLinks = [
     { name: "Login", path: "/login" },
     { name: "Register", path: "/register" },
   ];
 
-  const extraPaths = ["/wishlist", "/notifications", "/profile", "/orders", "/settings"];
+  const extraLinks = [
+    { name: "Wishlist", path: "/wishlist" },
+    { name: "Notifications", path: "/notifications" },
+    { name: "Profile", path: "/profile" },
+    { name: "Orders", path: "/orders" },
+    { name: "Settings", path: "/settings" },
+  ];
 
   const handleLogout = async () => {
     const success = await logout();
@@ -253,17 +260,17 @@ const Navbar = () => {
 
           {isAuth && (
             <>
-              {[...baseLinks.map(link => link.path), ...extraPaths].map((p) => (
+              {[...baseLinks, ...extraLinks].map((link) => (
                 <NavLink
-                  key={p}
-                  to={p}
+                  key={link.path}
+                  to={link.path}
                   onClick={() => setIsOpen(false)}
                   className="block py-2 font-medium text-gray-700 dark:text-gray-300"
                 >
-                  {p.replace("/", "").charAt(0).toUpperCase() + p.slice(2)}
+                  {link.name}
                 </NavLink>
-              )
-              )}
+              ))}
+
               <button
                 onClick={handleLogout}
                 className="block w-full text-left py-2 font-medium text-gray-700 dark:text-gray-300"

@@ -107,9 +107,9 @@ const Auction = () => {
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div className="flex flex-col md:grid md:grid-cols-3 lg:grid-cols-4 gap-4">
           {/* Filter Sidebar */}
-          <aside className="hidden sticky top-24 self-start  md:flex lg:col-span-1">
+          <aside className="h-[200px] md:h-auto lg:col-span-1 lg:sticky lg:top-28 lg:self-start">
             <Filter
               onFilterChange={handleFilterChange}
               inAuction={true}
@@ -117,7 +117,7 @@ const Auction = () => {
           </aside>
 
           {/* Artwork Grid */}
-          <div className="sticky top-24 self-start md:col-span-2 lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 xl:grid-cols-3 gap-6">
+          <div className="md:col-span-2 lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 xl:grid-cols-3 gap-6">
             {
               !artworkLoading ? (
                 artworks.map((artwork) => (

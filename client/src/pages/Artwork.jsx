@@ -132,7 +132,7 @@ const Artwork = () => {
                   className="w-full h-96 object-center rounded shadow"
                 />
 
-                <div className="flex gap-4">
+                <div className="flex gap-4 overflow-y-scroll md:overflow-y-hidden">
                   {artwork?.images?.map((img, index) => (
                     <img
                       key={index}

@@ -3,7 +3,7 @@ import { useState } from 'react';
 const FilterSection = ({ title, options, name, selectedValue, onChange }) => (
   <div className="mb-6">
     <h3 className="text-sm font-semibold mb-2 px-4">{title}</h3>
-    <ul className="grid grid-cols-1 space-x-4 space-y-2 text-sm md:grid-cols-2">
+    <ul className="grid grid-cols-2 md:grid-cols-1 space-x-4 space-y-2 text-sm lg:grid-cols-2">
       {options.map((item) => (
         <li key={item} className="px-4">
           <label className="inline-flex items-center gap-2">
@@ -49,7 +49,7 @@ const ArtFilters = ({ onFilterChange, inAuction }) => {
   };
 
   return (
-    <div className="h-full pb-2 bg-white shadow dark:bg-gray-800 dark:text-white w-full rounded">
+    <div className="h-full grid overflow-y-scroll md:overflow-y-hidden pb-2 bg-white shadow dark:bg-gray-800 dark:text-white w-full rounded">
       <h2 className="text-lg font-semibold mb-4 sticky top-0 bg-white dark:bg-gray-800 py-4 text-center shadow">
         Filters
       </h2>

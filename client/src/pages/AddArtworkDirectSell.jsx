@@ -162,11 +162,11 @@ const AddArtworkDirect = () => {
   return (
     <>
       <Navbar />
-      <main className="bg-gray-50 dark:bg-gray-900 text-black dark:text-white min-h-screen pt-24 px-6 md:px-16 pb-10">
+      <main className="bg-gray-50 dark:bg-gray-900 text-black dark:text-white min-h-screen pt-20 md:pt-24 px-4 md:px-16 pb-10">
 
         {/* Form secton */}
-        <section className="max-w-5xl mx-auto bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg">
-          <h1 className="text-3xl font-bold mb-8 text-center">
+        <section className="max-w-5xl mx-auto bg-white dark:bg-gray-800 p-6 md:p-8 rounded-xl shadow-lg">
+          <h1 className="text-xl md:text-3xl font-bold mb-8 text-center">
             Add Artwork for Direct Sale
           </h1>
 

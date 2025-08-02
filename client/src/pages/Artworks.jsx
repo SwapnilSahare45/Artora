@@ -65,20 +65,20 @@ const Artworks = () => {
   return (
     <main className="bg-white text-black dark:bg-gray-900 dark:text-white min-h-screen">
       <Navbar />
-      <section className="pt-28 pb-16 px-4 sm:px-6 lg:px-24">
+      <section className="pt-20 md:pt-28 pb-16 px-4 sm:px-6 md:px-12">
         <div className="mb-10 text-center">
-          <h1 className="text-4xl font-bold mb-2">Explore Artworks</h1>
+          <h1 className="text-2xl md:text-4xl font-bold mb-2">Explore Artworks</h1>
           <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-            Discover curated pieces available for direct purchase and live auctions.
+            Discover curated pieces available for direct purchase.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-          <aside className="lg:col-span-1 sticky top-28 self-start">
+        <div className="flex flex-col md:grid md:grid-cols-3 lg:grid-cols-4 gap-4">
+          <aside className="h-[200px] md:h-auto lg:col-span-1 lg:sticky lg:top-28 lg:self-start">
             <Filter onFilterChange={handleFilterChange} />
           </aside>
 
-          <div className="lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 xl:grid-cols-3 gap-6">
+          <div className="md:col-span-2 lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 xl:grid-cols-3 gap-6">
             {!isLoading ? (
               artworks.map((art) => (
                 <ArtworkCard
