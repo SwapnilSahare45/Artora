@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { ShoppingBag, Heart, Bell, Settings, Pencil, Save, X, Trash2, Edit, Upload } from "lucide-react";
 import { useArtworkStore } from "../store/artworkStore";
 import { useAuthStore } from "../store/authStore";
-import ProfileSkeleton from "../components/skeleton/profileSkeleton";
+import ProfileSkeleton from "../components/skeleton/ProfileSkeleton";
 import MyArtworkCardSkeleton from "../components/skeleton/MyArtworkCardSkeleton";
 import { toast } from "react-toastify";
 
