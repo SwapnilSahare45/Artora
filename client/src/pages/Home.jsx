@@ -24,6 +24,8 @@ const Home = () => {
     getThreeFeedback();
   }, [profile, getThreeArtwork, getThreeFeedback]);
 
+  console.log(feedbacks)
+
   return (
     <main className='bg-gray-50 text-black dark:bg-gray-900 dark:text-white'>
       <Navbar />
