@@ -4,11 +4,14 @@
 
 The platform includes **Profile**, **Wishlist**, **Orders**, **Notifications**, and **Payment** sections. Multiple payment options like **Card, UPI, Wallet, and COD** are shown, but currently only **COD (Cash on Delivery)** is implemented. Users can filter artworks by various criteria for better browsing.
 
+I also added **Role-Based Authentication** and an **Admin Dashboard** to make the web app closer to real-world application.
+
 ---
 
 ## ✨ Features
 
 - **OTP-based Authentication**
+- **Role-Based Access** (Collector, Artist, Admin)
 - **Direct Sell and Auction** artwork listings
 - **Artwork Filtering** (by category, style, orientation, etc.)
 - **Add/Remove** artworks to/from **Wishlist**
@@ -18,6 +21,7 @@ The platform includes **Profile**, **Wishlist**, **Orders**, **Notifications**, 
 - **Update** listed artworks (only for direct sell)
 - **Simulated Order System** (COD only)
 - **Theme Toggle** for *Light / Dark / System*
+- **Admin Dashboard** to manage Users, Orders, Artworks, and Auctions
 
 ---
 
