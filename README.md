@@ -11,7 +11,7 @@ I also added **Role-Based Authentication** and an **Admin Dashboard** to make th
 ## ✨ Features
 
 - **OTP-based Authentication**
-- **Role-Based Access** (Collector, Artist, Admin)
+- **Role-Based Access**  (Collector, Artist, Admin)
 - **Direct Sell and Auction** artwork listings
 - **Artwork Filtering** (by category, style, orientation, etc.)
 - **Add/Remove** artworks to/from **Wishlist**
