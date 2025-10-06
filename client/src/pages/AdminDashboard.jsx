@@ -82,8 +82,7 @@ const AdminDashboard = () => {
             Overview
           </h2>
           <p className="text-gray-600 dark:text-gray-400 text-sm sm:text-base">
-            Quick snapshot of platform activity. Explore detailed reports in the
-            respective sections (Users, Artworks, Orders).
+            ...Additional overview content can go here...
           </p>
         </section>
       </main>
