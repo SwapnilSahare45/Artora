@@ -11,11 +11,11 @@ import { useEffect } from 'react';
 import { useFeedbackStore } from '../store/feedbackStore';
 
 const Home = () => {
-  // states from auth store
+
   const { profile, user } = useAuthStore();
-  // states from artwork store
+
   const { getThreeArtwork, artworks } = useArtworkStore();
-  // states from feedback store
+
   const { getThreeFeedback, feedbacks } = useFeedbackStore();
 
   useEffect(() => {
@@ -74,7 +74,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Why Artora */}
+      {/* Why choose Artora section */}
       <section className='pb-12'>
         <h1 className='text-4xl font-semibold mb-8 text-center'>Why Choose The ARTORA?</h1>
         <div className='grid grid-cols-1 gap-4 px-4 md:grid-cols-3 md:px-8 lg:px-24'>

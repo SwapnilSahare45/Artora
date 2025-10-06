@@ -5,7 +5,7 @@ const cloudinary = require("../util/cloudinary.config");
 
 exports.getThreeArtwork = async (req, res) => {
   try {
-    // Fetch all artworks
+
     const allArtworks = await Artwork.find().populate("auctionId");
 
     // Randomly pick 3
@@ -117,7 +117,7 @@ exports.getMyArtworks = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: "server error", error: error.message });
   }
-}
+};
 
 exports.getArtworks = async (req, res) => {
   try {
@@ -217,7 +217,6 @@ exports.getArtworkById = async (req, res) => {
   try {
     const { id } = req.params;
 
-    // Find the artwork by id
     const artwork = await Artwork.findById(id).populate("auctionId");
 
     if (!artwork) {
@@ -228,7 +227,7 @@ exports.getArtworkById = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
-}
+};
 
 exports.updateArtwork = async (req, res) => {
   try {
@@ -317,21 +316,19 @@ exports.deleteArtwork = async (req, res) => {
       return res.status(403).json({ message: "Not authorized to delete this artwork" });
     }
 
-    // Delete artwork by id
     await Artwork.deleteOne({ _id: id });
 
     res.status(200).json({ message: "Artwork deleted successfully" });
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
   }
-}
+};
 
 exports.placeBid = async (req, res) => {
   try {
     const artworkId = req.params.id;
     const userId = req.user.id;
 
-    // Find the artwork
     const artwork = await Artwork.findById(artworkId).populate("owner", "_id");
     if (!artwork || !artwork.inAuction) {
       return res.status(404).json({ message: "Artwork not found or not in auction" });
@@ -395,7 +392,7 @@ exports.placeBid = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
   }
-}
+};
 
 exports.getBids = async (req, res) => {
   try {
@@ -408,4 +405,4 @@ exports.getBids = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
   }
-}
+};

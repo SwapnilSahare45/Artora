@@ -14,20 +14,16 @@ const Settings = () => {
 
   const { updateProfile, profile, user, error } = useAuthStore();
 
-  // Fetch the logged-in user profile when component mount or profile changes
   useEffect(() => {
     profile();
   }, [profile]);
 
-  // State to hold user data(name, bio)
   const [updateUser, setUpdateUser] = useState(user);
 
-  // Set user to updateProfile state when component mount or user changes
   useEffect(() => {
     if (user) setUpdateUser(user);
   }, [user]);
 
-  // State to hold avatarFile
   const [avatarFile, setAvatarFile] = useState(null);
 
   // State to hold avatarPreview url
@@ -42,7 +38,7 @@ const Settings = () => {
     }
   }
 
-  // Function to handle update
+  // Function to handle profile edit
   const handleUpdate = async () => {
     // Append edit data
     const data = new FormData();
@@ -51,14 +47,11 @@ const Settings = () => {
     data.append('bio', updateUser.bio);
 
     const success = await updateProfile(data);
-    // When profile update successfully then show an success message and
-    // set the isEditing state to false
     if (success) {
       toast.success("Profile update successfully.");
     }
-  }
+  };
 
-  // Show an error when component mount or error changes
   useEffect(() => {
     if (error) {
       toast.error(error);

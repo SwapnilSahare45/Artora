@@ -3,17 +3,19 @@ import { useEffect } from "react";
 import { useAuthStore } from "../store/authStore";
 import Loader from "./Loader";
 
-// If user is autheniticate then user navigat to artworks
 const PublicRoute = () => {
-    const { isAuthenticated, profile, isLoading } = useAuthStore();
+    const { isAuthenticated, user, profile, isLoading } = useAuthStore();
 
     useEffect(() => {
-        profile();
-    }, [profile]);
+        if (!user) profile();
+    }, [user, profile]);
 
-    if (isLoading) return <Loader/>;
+    if (isLoading) return <Loader />;
 
-    if (isAuthenticated) return <Navigate to="/artworks" />;
+    if (isAuthenticated) {
+        if (user?.role === "admin") return <Navigate to="/admin" replace />;
+        return <Navigate to="/" replace />;
+    };
 
     return <Outlet />;
 };

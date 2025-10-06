@@ -7,19 +7,17 @@ import { toast } from "react-toastify";
 
 const Register = () => {
 
-  // State to hold user input values
   const [user, setUser] = useState({ name: '', email: '', password: '' });
-  // State to hold validation errors
+
   const [errors, setErrors] = useState({ name: '', email: '', password: '' })
 
-  // States from auth store
   const { register, isLoading, error } = useAuthStore();
 
   const navigate = useNavigate();
 
   // Function to handle new user registeration
   const handleRegister = async () => {
-    // object to store validation error
+
     const newErrors = { name: '', email: '', password: '' };
 
     // Validation
@@ -42,8 +40,6 @@ const Register = () => {
 
     const { success } = await register(user);
 
-    // Check the registeration is successful
-    // if yes the navigate to verify to verify user else show an error
     if (success) {
       toast.success('Verification code sent to your email.');
       navigate("/verify");

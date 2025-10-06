@@ -8,10 +8,9 @@ import Footer from "@/components/Footer";
 import Filter from "@/components/ArtFilters";
 
 const Artworks = () => {
-  // States from artwork store
+
   const { getArtworks, artworks, isLoading, error, page, totalPages, setPage, } = useArtworkStore();
 
-  // get the artworks when component mount
   useEffect(() => {
     getArtworks({ page });
   }, [page]);

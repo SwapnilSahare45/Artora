@@ -5,23 +5,20 @@ import { useAuthStore } from '../store/authStore';
 import { useNavigate } from 'react-router-dom';
 
 const Otp = () => {
-    // State to hold user input value
+
     const [data, setData] = useState({ email: '', code: '' });
 
-    // States from auth store
     const { user, verifyUser, isLoading, error } = useAuthStore();
 
     const navigate = useNavigate();
 
-    // When componet mount or user value change check email is available or not.
-    // If not then navigate to register else set the email in data state
     useEffect(() => {
         if (!user?.email) {
             navigate("/register");
         } else {
             setData((prev) => ({ ...prev, email: user.email }));
         }
-    }, [user])
+    }, [user]);
 
     // Function to handle verify user
     const handleVerify = async () => {
@@ -32,15 +29,13 @@ const Otp = () => {
 
         const success = await verifyUser(data);
 
-        // Check user verify successfully
-        // if yes then navigate to login else show an error
         if (success) {
             toast.success('Registeration successful.');
             navigate("/login");
         } else {
             toast.error(error || "Something went wrong!");
         }
-    }
+    };
 
     return (
         <main className="grid grid-cols-1 md:grid-cols-2 h-auto bg-white md:h-screen">

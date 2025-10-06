@@ -3,7 +3,6 @@ const Artwork = require("../models/artwork.model");
 const Payment = require("../models/payment.model");
 const Notification = require("../models/notification.model");
 
-// Place order
 exports.placeOrder = async (req, res) => {
   try {
     const buyerId = req.user?._id;
@@ -22,7 +21,6 @@ exports.placeOrder = async (req, res) => {
       return res.status(400).json({ message: "Artwork and complete shipping address are required." });
     }
 
-    // Fetch the artwork and populate owner
     const art = await Artwork.findById(artwork).populate("owner", "_id");
     if (!art) {
       return res.status(404).json({ message: "Artwork not found." });
@@ -78,7 +76,6 @@ exports.placeOrder = async (req, res) => {
       isPaid: false,
     });
 
-    // Send notifications
     await Notification.create({
       user: buyerId,
       type: "order",
@@ -103,7 +100,6 @@ exports.placeOrder = async (req, res) => {
   }
 };
 
-// Get all orders for the logged-in user
 exports.getOrders = async (req, res) => {
   try {
     const userId = req.user._id;
@@ -122,7 +118,6 @@ exports.getOrders = async (req, res) => {
   }
 };
 
-// Get a single order by ID
 exports.getOrder = async (req, res) => {
   try {
     const { id } = req.params;

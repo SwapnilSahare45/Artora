@@ -4,7 +4,7 @@ import { Heart } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import { useArtworkStore } from "../store/artworkStore";
 import { useEffect, useState } from "react";
-import { getFormattedTimeLeft } from "../../utils/getFormattedTimeLeft";
+import { getFormattedTimeLeft } from "../utils/getFormattedTimeLeft";
 import ArtworkSkeleton from "../components/skeleton/ArtworkSkeleton";
 import { useWishlistStore } from "../store/wishlistStore";
 import { toast } from "react-toastify";
@@ -12,10 +12,8 @@ import { useBidsStore } from "../store/bidsStore";
 
 const Artwork = () => {
 
-  // Extract the id parameter from the URL
   const { id } = useParams();
 
-  // States from artwork store
   const { getArtwork, artwork, isLoading, error: artworkError } = useArtworkStore();
 
   // State to hold preview image 
@@ -24,18 +22,17 @@ const Artwork = () => {
   // State to hold time left for auction
   const [timeLeft, setTimeLeft] = useState(null);
 
-  // Fetch artwork when component mount or when artwork id changes
   useEffect(() => {
     if (id) {
       getArtwork(id);
-    }
+    };
   }, [id, getArtwork]);
 
   // Set a preview image when component mount or when artwork changes
   useEffect(() => {
     if (artwork?.image) {
       setPreviewImage(artwork.image);
-    }
+    };
   }, [artwork]);
 
   // Set the formatted date when component mount or when artwork changes
@@ -58,14 +55,12 @@ const Artwork = () => {
     getWishlist();
   }, [getWishlist]);
 
-  // State to hold boolean value for is in wishlist
   const [isInWishlist, setIsInWishlist] = useState(false);
 
-  // Check is in wishlist when component mount or wishlist or id changes
   useEffect(() => {
     const found = wishlist?.some(item => item.artwork === id);
     setIsInWishlist(found);
-  }, [wishlist, id])
+  }, [wishlist, id]);
 
   // Toggle functon to handle add and remove artwork from wishlist
   const handleWishlistToggle = async (id) => {
@@ -84,29 +79,25 @@ const Artwork = () => {
           ? "Artwork removed from your wishlist."
           : "Artwork added to your wishlist."
       );
-    }
+    };
   };
 
-  // States from bids store
   const { placeBid, isLoading: bidLoading, error: bidError } = useBidsStore();
 
-  // functin to handle place bid
   const handlePlaceBid = async (id) => {
     await placeBid(id);
-  }
+  };
 
-  // Show an error when component mount or when artwork error or wishlist error changes
   useEffect(() => {
     if (artworkError || wishlistError || bidError) {
       toast.error(artworkError || wishlistError || bidError);
-    }
+    };
   }, [artworkError, wishlistError, bidError]);
 
   return (
     <main className="bg-gray-50 text-black dark:bg-gray-900 dark:text-white min-h-screen">
       <Navbar />
 
-      {/* Conditional rendering for loading state */}
       {
         !isLoading ? (
           <section className="pt-28 pb-12 px-4 md:px-8 lg:px-24">
@@ -192,7 +183,7 @@ const Artwork = () => {
                   {artwork?.description}
                 </p>
 
-                {/* Pricing and CTA */}
+                {/* Pricing */}
                 <div className="mt-4 space-y-3">
                   {/* Conditional redering for Auction */}
                   {!artwork?.inAuction ? (
@@ -210,7 +201,7 @@ const Artwork = () => {
                     </>
                   ) : (
                     <>
-                      {/* If it is in auction the show current bid time left and place bid button */}
+                      {/* If it is in auction then show current bid time left and place bid button */}
                       {
                         artwork?.currnetBid <= 0 ? (
                           <p className="text-xl">Opening Bid: ₹ {artwork?.openingBid}</p>
@@ -238,7 +229,6 @@ const Artwork = () => {
             </div>
           </section>
         ) : (
-          // If is loading show the artwork skeleton
           <ArtworkSkeleton />
         )
       }

@@ -6,7 +6,6 @@ exports.addToWishlist = async (req, res) => {
         const userId = req.user._id;
         const { id } = req.params;
 
-        // Find the artwork by its ID
         const artwork = await Artwork.findById(id);
         if (!artwork) return res.status(404).json({ message: "Artwork not found" });
 
@@ -28,13 +27,12 @@ exports.addToWishlist = async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: "Server error", error: error.message });
     }
-}
+};
 
 exports.getWishlist = async (req, res) => {
     try {
         const userId = req.user._id;
 
-        // Fetch all wishlist items for the user
         const wishlistItems = await Wishlist.find({ user: userId }).populate("artwork");
         if (!wishlistItems) {
             return res.status(404).json({ message: "Wishlist items not found" });
@@ -44,7 +42,7 @@ exports.getWishlist = async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: "Server error", error: error.message });
     }
-}
+};
 
 exports.removeFromWishlist = async (req, res) => {
     try {
@@ -55,11 +53,10 @@ exports.removeFromWishlist = async (req, res) => {
             return res.status(404).json({ message: "Item not found." });
         }
 
-        // Artwork remove from the wishlist
         await Wishlist.deleteOne({ artwork });
 
         res.status(200).json({ message: "Artwork remove from wishlist" });
     } catch (error) {
         res.status(500).json({ message: "Server error", error: error.message });
     }
-}
+};

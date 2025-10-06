@@ -13,17 +13,14 @@ const PlaceOrder = () => {
 
   const navigate = useNavigate();
 
-  // State to hold payment method
   const [paymentMethod, setPaymentMethod] = useState("cod");
-  // State to hold quantity of artworks
+
   const [quantity, setQuantity] = useState(1);
-  // State to hold shipping address
+
   const [shippingAddress, setShippingAddress] = useState({ fullName: '', phone: '', address: '', city: '', pinCode: '' });
 
-  // States from artwork store
   const { getArtwork, artwork, error: artworkError } = useArtworkStore();
 
-  // fetch the artwork when component mount or id changes
   useEffect(() => {
     if (id) {
       getArtwork(id);
@@ -47,10 +44,8 @@ const PlaceOrder = () => {
     return totalArtworkPrice + shippingFee;
   }, [totalArtworkPrice, shippingFee]);
 
-  // States from order store
   const { placeOrder, error: orderError } = useOrderStore();
 
-  // Function to handle place order
   const handlePlaceOrder = async () => {
 
     // Validations
@@ -84,14 +79,12 @@ const PlaceOrder = () => {
       {}
     );
 
-    // If order placed successfully then show an success message and navigate to orders page
     if (success) {
       toast.success("Order placed.");
       navigate("/orders")
     }
   };
 
-  // Show an error when component mount or artworkError or orderError changes
   useEffect(() => {
     if (artworkError || orderError) {
       toast.error(artworkError || orderError);

@@ -10,37 +10,31 @@ import MyArtworkCardSkeleton from "../components/skeleton/MyArtworkCardSkeleton"
 import { toast } from "react-toastify";
 
 const Profile = () => {
-  // State to hold edit
+
   const [isEditing, setIsEditing] = useState(false);
-  // state to hold user avatar when edit
+
   const [avatarFile, setAvatarFile] = useState(null);
+
   // State to hold previewUrl of avatar when edit
   const [previewUrl, setPreviewUrl] = useState(null);
 
-  // State to hold filter artworks
   const [filterArtworks, setFilterArtworks] = useState([]);
 
-  // States from auth store
   const { profile, user, isLoading: profileLoading, updateProfile, error: profileError } = useAuthStore();
 
-  // States from artwork store
   const { getMyArtworks, deleteArtwork, artworks, isLoading: artworksLoading, error: artworkError } = useArtworkStore();
 
-  // Fetch the logged-in user profile and artworks when the component mount or
-  // profile r getMyArtworks changes
   useEffect(() => {
     profile();
     getMyArtworks();
   }, [profile, getMyArtworks]);
 
-  // Set artworks when component mount or artworks changes
   useEffect(() => {
     if (artworks) {
       setFilterArtworks(artworks);
     }
   }, [artworks]);
 
-  // Handle avatar change and set the preview of avatar
   const handleAvatarChange = async (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -49,14 +43,13 @@ const Profile = () => {
     }
   };
 
-  // State to hold user edit data
   const [editData, setEditData] = useState(user);
-  // Set user edit data when component mount or user changes
+
   useEffect(() => {
     if (user) setEditData(user);
-  }, [user])
+  }, [user]);
 
-  // Handle save
+  //Function to handle save for profile edit
   const handleSave = async () => {
     // Append edit data
     const data = new FormData();
@@ -65,26 +58,23 @@ const Profile = () => {
     data.append('bio', editData.bio);
 
     const { success } = await updateProfile(data);
-    // When profile update successfully then show an success message and
-    // set the isEditing state to false
+  
     if (success) {
       toast.success("Profile update successfully.");
       setIsEditing(false);
     }
-  }
+  };
 
-  // Handle delete artwork
+  // Function to handle artowrk delete
   const handleDeleteArtwork = async (id) => {
     const { success } = await deleteArtwork(id);
     if (success) {
-      // Show an success error when artwork deleted successfully
       toast.success("Artwork deleted successfully.");
       // filter the deleted artwork
       setFilterArtworks(prev => prev.filter(art => art._id !== id));
     }
-  }
+  };
 
-  // Show an error when component mount or profileError or artworkError changes
   useEffect(() => {
     if (profileError || artworkError) {
       toast.error(profileError || artworkError);
@@ -97,7 +87,6 @@ const Profile = () => {
 
       <section className="pt-28 pb-16 px-4 md:px-8 lg:px-24 max-w-5xl mx-auto">
 
-        {/* Conditional redering for profile loading state */}
         {
           !profileLoading ? (
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 bg-white dark:bg-gray-800 p-6 rounded-lg shadow mb-8">
@@ -201,7 +190,6 @@ const Profile = () => {
               </div>
             </div>
           ) : (
-            // Show the profile skeleton when profile loading state is true
             <ProfileSkeleton />
           )
         }
@@ -242,7 +230,6 @@ const Profile = () => {
         <h3 className="text-xl font-semibold mb-4">My Artworks</h3>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {
-            // Conditional redering for artworks and artwork loading state
             artworks ? (
               !artworksLoading ? (
                 filterArtworks.map((art) => (
@@ -285,14 +272,12 @@ const Profile = () => {
                 ))
               ) : (
                 <>
-                  {/* Show the logged-in artwork card skeleton when artwork state is loading */}
                   <MyArtworkCardSkeleton />
                   <MyArtworkCardSkeleton />
                   <MyArtworkCardSkeleton />
                 </>
               )
             ) : (
-              // Show when artwork not found
               <p>No artwork found.</p>
             )
           }

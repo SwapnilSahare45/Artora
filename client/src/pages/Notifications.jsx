@@ -22,7 +22,6 @@ const NotificationIcon = ({ type }) => {
 
 const Notifications = () => {
 
-  // States from notification store
   const { getNotifications, notifications } = useNotificationStore();
 
   useEffect(() => {

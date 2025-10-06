@@ -10,17 +10,14 @@ import { toast } from "react-toastify";
 const Order = () => {
   const { id } = useParams();
 
-  // States from order state
   const { getOrder, order, isLoading, error } = useOrderStore();
 
-  // Fetch order when the component mount or getOrder changes
   useEffect(() => {
     if (id) {
       getOrder(id);
     }
   }, [id, getOrder]);
 
-  // Show an error when component mount or error changes
   useEffect(() => {
    if(error){
     toast.error(error);

@@ -44,7 +44,7 @@ const AddArtworkAuction = () => {
       newErrors.openingBid = "Opening bid required.";
     } else if (artworkData.openingBid < 0) {
       newErrors.openingBid = "Opening bid must be greater than 0.";
-    }
+    };
     if (!artworkData.category.trim()) newErrors.category = "Category required.";
     if (!artworkData.size.trim()) newErrors.size = "Artwork size required.";
     if (!artworkData.medium.trim()) newErrors.medium = "Medium required.";
@@ -56,7 +56,7 @@ const AddArtworkAuction = () => {
       newErrors.images = "At least one artwork image is required.";
     } else if (selectedImages.length > 8) {
       newErrors.images = "You can upload up to 8 images only.";
-    }
+    };
 
     setErrors(newErrors);
 
@@ -97,16 +97,15 @@ const AddArtworkAuction = () => {
       // Clear state of thumbnail and images
       setSelectedThumbnail(null);
       setSelectedImages(null);
-    }
-  }
+    };
+  };
 
   // Show an error when component mount or error changes
   useEffect(() => {
     if (error) {
       toast.error(error);
-    }
+    };
   }, [error]);
-
 
   return (
     <>

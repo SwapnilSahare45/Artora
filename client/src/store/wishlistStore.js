@@ -1,18 +1,17 @@
 import { create } from "zustand"
 import { addToWishlistService, getWishlistService, removeFromWishlistService } from "../services/wishlistService";
 
-// Create a zustand store for wishlist
 export const useWishlistStore = create((set) => ({
-    wishlist: [], // Stores wishlist items from wishlist request
+    wishlist: [],
     isLoading: false,
     error: null,
 
     // Add an artwork to wishlst
     addToWishlist: async (id) => {
-        set({ isLoading: true });
+        set({ isLoading: true, error: null });
         try {
             await addToWishlistService(id);
-            set({ isLoading: false });
+            set({ isLoading: false, error: null });
             return { success: true };
         } catch (error) {
             set({ error: error.response.data?.message, isLoading: false });
@@ -21,10 +20,10 @@ export const useWishlistStore = create((set) => ({
 
     // Get all the artworks from wishlist
     getWishlist: async () => {
-        set({ isLoading: true });
+        set({ isLoading: true, error: null });
         try {
             const response = await getWishlistService();
-            set({ wishlist: response.data.wishlistItems, isLoading: false });
+            set({ wishlist: response.data.wishlistItems, isLoading: false, error: null });
         } catch (error) {
             set({ error: error.response.data?.message, isLoading: false });
         }
@@ -32,10 +31,10 @@ export const useWishlistStore = create((set) => ({
 
     // Remove the artwork from wishlist
     removeFromWishlist: async (id) => {
-        set({ isLoading: true });
+        set({ isLoading: true, error: null });
         try {
             await removeFromWishlistService(id);
-            set({ isLoading: false });
+            set({ isLoading: false, error: null });
             return { success: true };
         } catch (error) {
             set({ error: error.response.data?.message, isLoading: false });

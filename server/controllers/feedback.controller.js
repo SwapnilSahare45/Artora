@@ -4,7 +4,6 @@ exports.getThreeFeedback = async (req, res) => {
     try {
         const allFeedbacks = await Feedback.find({ rating: 5 }).populate("user");
         
-        // Peek the random three feedback
         const shuffled = allFeedbacks.sort(() => 0.5 - Math.random());
         const randomThree = shuffled.slice(0, 3);
 
@@ -12,7 +11,7 @@ exports.getThreeFeedback = async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: "Server error", error: error.message });
     }
-}
+};
 
 exports.giveFeedback = async (req, res) => {
     try {
@@ -36,7 +35,7 @@ exports.giveFeedback = async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: "Server error", error: error.message });
     }
-}
+};
 
 exports.getFeedback = async (req, res) => {
     try {
@@ -47,4 +46,4 @@ exports.getFeedback = async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: "Server error", error: error.message });
     }
-}
+};

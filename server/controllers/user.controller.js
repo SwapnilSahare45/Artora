@@ -15,17 +15,14 @@ exports.register = async (req, res) => {
             return res.status(400).json({ message: 'All fields are required' });
         }
 
-        //Validate email format
         if (!validator.isEmail(email)) {
             return res.status(400).json({ message: 'invalid email format' });
         }
 
-        // Validate password strength
         if (!validator.isStrongPassword(password)) {
             return res.status(400).json({ message: 'Password must be at least 8 characters long and include uppercase, lowercase, number, and symbol' });
         }
 
-        // Check if user already exists
         const existingUser = await User.findOne({ email });
 
         if (existingUser && existingUser.isVerified) {
@@ -57,7 +54,7 @@ exports.register = async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: 'Server error', error: error.message });
     }
-}
+};
 
 exports.verifyOtp = async (req, res) => {
     const { email, code } = req.body;
@@ -80,12 +77,11 @@ exports.login = async (req, res) => {
             return res.status(400).json({ message: 'Email and password are required' });
         }
 
-        // Validate email format
         if (!validator.isEmail(email)) {
             return res.status(400).json({ message: 'Invalid email format' });
         }
 
-        const user = await User.findOne({ email }); // Find user by email
+        const user = await User.findOne({ email });
 
         if (!user) {
             return res.status(400).json({ message: 'User not found' });
@@ -117,12 +113,13 @@ exports.login = async (req, res) => {
                 id: user._id,
                 name: user.name,
                 email: user.email,
+                role: user.role,
             }
         });
     } catch (error) {
         res.status(500).json({ message: 'Server error', error: error.message });
     }
-}
+};
 
 exports.getMe = async (req, res) => {
     try {
@@ -139,7 +136,6 @@ exports.updateMe = async (req, res) => {
         const { name, bio } = req.body || {};
         let avatarUrl = req.user.avatar;
 
-        // Check if there is anything to update
         if (!name && !bio && !req.file) {
             return res.status(400).json({ message: 'No update fields provided' });
         }
@@ -177,7 +173,7 @@ exports.updateMe = async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: "Server error", error: error.message });
     }
-}
+};
 
 exports.logout = async (req, res) => {
     // clear cookie when user logout

@@ -14,13 +14,10 @@ const Auction = () => {
 
   const { id } = useParams();
 
-  // States from auction store
   const { getAuction, auction, isLoading: auctionLoading, error: auctionError } = useAuctionStore();
 
-  // States from artwork store
   const { getAuctionArtworks, artworks, isLoading: artworkLoading, error: artworkError, page, totalPages, setPage } = useArtworkStore();
 
-  // Fetch auction and artwork when component mount or id changes
   useEffect(() => {
     if (id) {
       getAuction(id);
@@ -28,13 +25,11 @@ const Auction = () => {
     }
   }, [id, page]);
 
-  // Handle filters
   const handleFilterChange = (filters) => {
     setPage(1);
     getAuctionArtworks(id, { ...filters, page: 1 });
   }
 
-  // Show an error when component mount or auctionError, artworkError changes
   useEffect(() => {
     if (auctionError || artworkError) {
       toast.error(auctionError || artworkError);

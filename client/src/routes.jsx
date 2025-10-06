@@ -20,21 +20,30 @@ import Otp from './pages/Otp';
 import PlaceOrder from './pages/PlaceOrder';
 import ProtectedRoute from './components/ProtectedRoute';
 import PublicRoute from './components/PublicRoute';
+import AdminDashboard from './pages/AdminDashboard';
+import UsersListAdmin from './pages/UsersListAdmin';
+import ArtworksListAdmin from './pages/ArtworksListAdmin';
+import ArtworksInAuctionListAdmin from './pages/ArtworksInAuctionListAdmin';
+import OrderListAdmin from './pages/OrderListAdmin';
+import CreateAuctionAdmin from './pages/createAuctionAdmin';
+import AuctionsAdmin from './pages/AuctionsAdmin';
 
 const AppRoutes = () => {
     return (
         <Routes>
+
             <Route index element={<Home />} />
 
             {/* Public Routes */}
+
             <Route element={<PublicRoute />}>
                 <Route path="login" element={<Login />} />
                 <Route path="register" element={<Register />} />
                 <Route path="verify" element={<Otp />} />
             </Route>
 
-            {/* Protected Routes */}
-            <Route element={<ProtectedRoute />}>
+            {/* Protected Routes for normal users (collector / artist) */}
+            <Route element={<ProtectedRoute requiredRole={["collector", "artist"]} />}>
                 <Route path="profile" element={<Profile />} />
                 <Route path="artworks" element={<Artworks />} />
                 <Route path="artwork/:id" element={<Artwork />} />
@@ -50,6 +59,17 @@ const AppRoutes = () => {
                 <Route path="settings" element={<Settings />} />
                 <Route path="place-order/:id" element={<PlaceOrder />} />
                 <Route path="feedback" element={<FeedbackForm />} />
+            </Route>
+
+            {/* Protected Routes for admin */}
+            <Route element={<ProtectedRoute requiredRole={["admin"]} />}>
+                <Route path='admin' element={<AdminDashboard />} />
+                <Route path='admin/add-auction' element={<CreateAuctionAdmin />} />
+                <Route path='admin/auctions' element={<AuctionsAdmin />} />
+                <Route path='admin/users' element={<UsersListAdmin />} />
+                <Route path='admin/artworks' element={<ArtworksListAdmin />} />
+                <Route path='admin/auctions-artwork' element={<ArtworksInAuctionListAdmin />} />
+                <Route path='admin/orders' element={<OrderListAdmin />} />
             </Route>
 
             <Route path="*" element={<NotFound />} />

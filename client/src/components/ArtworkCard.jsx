@@ -1,12 +1,11 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { getFormattedTimeLeft } from "../../utils/getFormattedTimeLeft";
+import { getFormattedTimeLeft } from "../utils/getFormattedTimeLeft";
 
 const ArtworkCard = ({ image, title, artist, amount, timeLeft, to = "#" }) => {
-  // State to set time
+
   const [time, setTime] = useState("");
 
-  // When component mount set the formatted time left
   useEffect(() => {
     if (!timeLeft) return;
 
@@ -16,7 +15,7 @@ const ArtworkCard = ({ image, title, artist, amount, timeLeft, to = "#" }) => {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [timeLeft])
+  }, [timeLeft]);
 
   return (
     <Link

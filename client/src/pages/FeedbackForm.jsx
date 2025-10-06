@@ -7,15 +7,11 @@ import { toast } from "react-toastify";
 
 const FeedbackForm = () => {
 
-  // State to hold rating
   const [rating, setRating] = useState(5);
-  // State to hold feedback
   const [feedback, setFeedback] = useState("");
 
-  // States from feedback store
   const { giveFeedback, isLoading, error } = useFeedbackStore();
 
-  // Handle send feedback
   const handleFeedback = async () => {
 
     if (!feedback) {
@@ -24,21 +20,18 @@ const FeedbackForm = () => {
 
     const success = await giveFeedback(rating, feedback);
 
-    // Show the success message when feedback submit successfully and 
-    // set rating 5 and clear feedback
     if (success) {
       toast.success("Thanks!");
       setRating(5);
       setFeedback("");
     }
-  }
+  };
 
-  // Show an error when component mount or error changes
   useEffect(() => {
     if (error) {
       toast.error(error);
     }
-  }, [error])
+  }, [error]);
 
   return (
     <>

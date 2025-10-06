@@ -9,10 +9,10 @@ export const useOrderStore = create((set) => ({
 
     // Place order
     placeOrder: async (artworkId, quantity, shippingAddress, paymentMethod, paymentDetails) => {
-        set({ isLoading: true });
+        set({ isLoading: true, error: null });
         try {
             await placeOrderService(artworkId, quantity, shippingAddress, paymentMethod, paymentDetails);
-            set({ isLoading: false });
+            set({ isLoading: false, error: null });
             return { success: true };
         } catch (error) {
             set({ error: error.response?.data?.message, isLoading: false });
@@ -21,10 +21,10 @@ export const useOrderStore = create((set) => ({
 
     // Get orders
     getOrders: async () => {
-        set({ isLoading: true });
+        set({ isLoading: true, error: null });
         try {
             const response = await getOrdersService();
-            set({ orders: response.data?.orders, isLoading: false });
+            set({ orders: response.data?.orders, isLoading: false, error: null });
         } catch (error) {
             set({ error: error.response?.data?.message, isLoading: false });
         }
@@ -32,10 +32,10 @@ export const useOrderStore = create((set) => ({
 
     // Get order
     getOrder: async (id) => {
-        set({ isLoading: true });
+        set({ isLoading: true, error: null });
         try {
             const response = await getOrderService(id);
-            set({ order: response.data?.order, isLoading: false });
+            set({ order: response.data?.order, isLoading: false, error: null });
         } catch (error) {
             set({ error: error.response.data?.message, isLoading: false });
         }

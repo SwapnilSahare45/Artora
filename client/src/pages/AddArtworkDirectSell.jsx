@@ -14,12 +14,10 @@ const AddArtworkDirect = () => {
   // Get the states from artwork store
   const { addArtwork, getArtwork, updateArtwork, artwork, isLoading, error } = useArtworkStore();
 
-  // Fetch the artwork details when component mount or when artwork id changes.
-  // Used when artwork update
   useEffect(() => {
     if (id) {
       getArtwork(id);
-    }
+    };
   }, [id, getArtwork]);
 
   // State to hold artwork data
@@ -39,8 +37,8 @@ const AddArtworkDirect = () => {
         orientation: artwork.orientation || "",
         description: artwork.description || "",
       });
-    }
-  }, [artwork])
+    };
+  }, [artwork]);
 
   // To hold reference of thumbnail and images
   const thumbnailRef = useRef(null);
@@ -72,7 +70,7 @@ const AddArtworkDirect = () => {
       newErrors.price = "Price required.";
     } else if (artworkData.price < 0) {
       newErrors.price = "Price must be greater than 0.";
-    }
+    };
     if (!artworkData.category.trim()) newErrors.category = "Category required.";
     if (!artworkData.size.trim()) newErrors.size = "Artwork size required.";
     if (!artworkData.medium.trim()) newErrors.medium = "Medium required.";
@@ -84,7 +82,7 @@ const AddArtworkDirect = () => {
       newErrors.images = "At least one artwork image is required.";
     } else if (selectedImages.length > 8) {
       newErrors.images = "You can upload up to 8 images only.";
-    }
+    };
 
     setErrors(newErrors);
 
@@ -124,8 +122,8 @@ const AddArtworkDirect = () => {
       // Clear state of thumbnail and images
       setSelectedThumbnail(null);
       setSelectedImages(null);
-    }
-  }
+    };
+  };
 
   // Function to handle update artwork
   const handleUpdateArtwork = async () => {
@@ -150,13 +148,13 @@ const AddArtworkDirect = () => {
     if (success) {
       toast.success("Artwork updated successfully.");
       navigate("/profile")
-    }
-  }
+    };
+  };
 
   useEffect(() => {
     if (error) {
       toast.error(error);
-    }
+    };
   }, [error]);
 
   return (

@@ -1,6 +1,6 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useAuctionStore } from "../store/auctionStore";
 import AuctionCard from "../components/AuctionCard";
 import AuctionCardSkeleton from "../components/skeleton/AuctionCardSkeleton";
@@ -9,15 +9,12 @@ import { toast } from "react-toastify";
 
 const Auctions = () => {
 
-  // States from auction store
   const { getAuctions, auctions, isLoading, error } = useAuctionStore();
 
-  // Fetch the auctions when component mount or getAuctions changes
   useEffect(() => {
     getAuctions();
   }, [getAuctions]);
 
-  // Show an error when component mount or error changes
   useEffect(() => {
     if (error) {
       toast.error(error);
@@ -41,7 +38,6 @@ const Auctions = () => {
           auctions ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {
-                // Conditional redering for loading state
                 !isLoading ? (
                   auctions.map((auction) => (
                     <AuctionCard
@@ -54,7 +50,6 @@ const Auctions = () => {
                   ))
                 ) : (
                   <>
-                    {/* When is loading show auction card skeleton */}
                     <AuctionCardSkeleton />
                     <AuctionCardSkeleton />
                     <AuctionCardSkeleton />

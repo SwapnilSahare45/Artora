@@ -6,12 +6,11 @@ import validator from "validator";
 import { toast } from 'react-toastify';
 
 const Login = () => {
-  // State to hold user input
+
   const [user, setUser] = useState({ email: '', password: '' });
-  // State to hold validation error
+
   const [errors, setErrors] = useState({ email: '', password: '' });
 
-  // States from auth store
   const { login, error, isLoading } = useAuthStore();
 
   const navigate = useNavigate();
@@ -34,15 +33,13 @@ const Login = () => {
 
     const { success } = await login(user);
 
-    // Check user login successful
-    // if yes navigate to artwork else show an error
     if (success) {
       toast.success("Login successful.");
       navigate("/artworks")
     } else {
       toast.error(error || "Something went wrong!");
     }
-  }
+  };
 
   return (
     <main className="grid grid-cols-1 md:grid-cols-2 h-auto bg-white md:h-screen">

@@ -6,37 +6,31 @@ import WishlistCard from "../components/WishlistCard";
 import { toast } from "react-toastify";
 import WishlistCardSkeleton from "../components/skeleton/WishlistCardSkeleton";
 
-
 const Wishlist = () => {
 
-  // States from wishlist store
   const { getWishlist, removeFromWishlist, wishlist, isLoading, error } = useWishlistStore();
 
-  // Fetch wishlist when component mount or getWishlist changes
   useEffect(() => {
     getWishlist();
   }, [getWishlist]);
 
-  // State to hold filter wishlist
   const [filterWishlist, setfilterWishlist] = useState([]);
-  // Set a wishlist in filterWishlist state when component mount or wishlist changes
+
   useEffect(() => {
     setfilterWishlist(wishlist);
   }, [wishlist]);
 
-  // Function to handle remove item from wishlist 
   const handleRemoveFromWishlist = async (id) => {
+
     const success = await removeFromWishlist(id);
 
     if (success) {
-      // When item successfully remove from wishlist show success message and 
-      // filter out the wishlist
       toast.success("Artwork remove from wishlist.");
+      // filter out the wishlist
       setfilterWishlist(prev => prev.filter(item => item.artwork?._id !== id));
     }
   };
 
-  // Show an error when component mount or error changes
   useEffect(() => {
     if (error) {
       toast.error(error);

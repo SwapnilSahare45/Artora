@@ -8,15 +8,12 @@ import { toast } from "react-toastify";
 
 const Orders = () => {
 
-  // States from order store
   const { getOrders, orders, isLoading, error } = useOrderStore();
 
-  // Fetch orders when the component mount or getOrders changes
   useEffect(() => {
     getOrders();
   }, [getOrders]);
 
-  // Show an error when component mount or error changes
   useEffect(() => {
     if (error) {
       toast.error(error);

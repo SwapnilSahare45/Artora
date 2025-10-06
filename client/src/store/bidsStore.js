@@ -8,12 +8,12 @@ export const useBidsStore = create((set) => ({
 
     // Place bid
     placeBid: async (id) => {
-        set({isLoading:true});
+        set({isLoading:true, error:null});
         try {
             const response = await placeBidService(id);
-            console.log(response)
         } catch (error) {
             set({error:error.response.data.message, isLoading:false});
         }
-    }
-}))
+    },
+    
+}));

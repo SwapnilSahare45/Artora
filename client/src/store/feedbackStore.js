@@ -8,10 +8,10 @@ export const useFeedbackStore = create((set) => ({
 
     // three random feedback
     getThreeFeedback: async () => {
-        set({ isLoading: true });
+        set({ isLoading: true, error: null });
         try {
             const response = await getThreeFeedbackService();
-            set({ feedbacks: response.data, isLoading: false });
+            set({ feedbacks: response.data, isLoading: false, error: null });
         } catch (error) {
             set({ error: error.response.data.message, isLoading: false });
         }
@@ -19,13 +19,13 @@ export const useFeedbackStore = create((set) => ({
 
     // Submit feedback
     giveFeedback: async (rating, feedback) => {
-        set({ isLoading: true });
+        set({ isLoading: true, error: null });
         try {
             await giveFeedbackService(rating, feedback);
-            set({ isLoading: false });
+            set({ isLoading: false, error: null });
             return { success: true };
         } catch (error) {
             set({ error: error.response?.data?.message, isLoading: false });
         }
     },
-}))
+}));
